@@ -1,10 +1,10 @@
 {
-  "版本": "3.7",
+  "版本": "3.8",
   "强制更新": "开",  
-  "公告开关": "关",
+  "公告开关": "开",
   "公告": "记得反馈问题查找bug，不要老想着白嫖。",
   "公告复制按钮文本": "复制QQ群",
-  "公告链接按钮文本": "前往链接",
+  "公告链接按钮文本": "前往加群",
   "公告复制内容": "今天天气很美",
   "公告链接": "mqqapi://card/show_pslcard?src_type=internal&version=1&uin=719050780&card_type=group&source=qrcode",
   "下载地址": "https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main/github/apk/Github%20King_3.7_20250911_010754.apk",
