@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-
-
 <meta charset="UTF-8">
-
 
 <title>关于她的故事</title>
 <style> 
-body{margin:0;background:#111;color:#fff;font-family:sans-serif}
+body{width:100vw;margin:0;background:#111;color:#fff;font-family:sans-serif}
 #c{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:12px}
 img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;cursor:pointer;-webkit-user-drag:none;user-select:none;-webkit-tap-highlight-color:transparent}
 #v{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center} 
@@ -52,7 +49,7 @@ v.addEventListener('click',()=>v.style.display='none');
 
 then(r=>r.json()).then(e=>{t=e.filter(f=>f.name.endsWith('.mp3')).map(f=>
 
-({u:'https://gh.ptoe.cc/'+f.download_url}));
+({u:'https://tvv.tw/'+f.download_url}));
 
 
 t.length&&(u.src=t[0].u)});q.onclick=()=>{p?u.pause():u.play();p=!p;q.textContent=p?'❚❚':'▶';l=!0};b.onclick=()=>{c=(c-1+t.length)%t.length;u.src=t[c].u;u.play();p=!0;q.textContent='❚❚';l=!0};n.onclick=()=>{c=(c+1)%t.length;u.src=t[c].u;u.play();p=!0;q.textContent='❚❚';l=!0};u.onended=n.onclick;d.addEventListener('click',()=>{!l&&t.length&&(u.play(),p=l=!0,q.textContent='❚❚')})}(document);
