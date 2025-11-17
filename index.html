@@ -4,13 +4,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="user-scalable=no">
-<title>关于她的故事</title>
+<title>关于 -- 雪 -- 的故事</title>
 <style> 
 body{width:100vw;margin:0;background:#111;color:#fff;font-family:sans-serif}
 #c{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:12px}
 img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;cursor:pointer;-webkit-user-drag:none;user-select:none;-webkit-tap-highlight-color:transparent}
 #v{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center} 
-#v img{width:100%;max-height:90vh;object-fit:contain}
+#v img{width:100%}
 </style> 
 <body>
 </head>
@@ -42,7 +42,7 @@ v.addEventListener('click',()=>v.style.display='none');
 
 
 //悬浮音乐
-!function(d){let t=[],c=0,p=!1,l=!1;if(d.getElementById('m-p'))return;let a=d.createElement('div');a.id='m-p';a.style.cssText='position:fixed;bottom:10%;left:50%;transform:translateX(-50%);display:flex;z-index:9999';a.innerHTML='<button id="b" style="font:55px sans-serif;background:0;border:0;color:#fff;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;user-select:none;margin-right:80px">⏮</button><button id="p" style="font:46px sans-serif;background:0;border:0;color:#fff;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;user-select:none">▶</button><button id="n" style="font:55px sans-serif;background:0;border:0;color:#fff;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;user-select:none;margin-left:80px">⏭</button><audio id="a" hidden>';d.body.appendChild(a);let b=d.getElementById('b'),q=d.getElementById('p'),n=d.getElementById('n'),u=d.getElementById('a');fetch
+!function(d){let t=[],c=0,p=!1,l=!1;if(d.getElementById('m-p'))return;let a=d.createElement('div');a.id='m-p';a.style.cssText='position:fixed;bottom:10%;left:50%;transform:translateX(-50%);display:flex;z-index:9999';a.innerHTML='<button id="b" style="font:0px sans-serif;background:0;border:0;color:#fff;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;user-select:none;margin-right:80px">⏮</button><button id="p" style="font:0px sans-serif;background:0;border:0;color:#fff;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;user-select:none">▶</button><button id="n" style="font:0px sans-serif;background:0;border:0;color:#fff;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;user-select:none;margin-left:80px">⏭</button><audio id="a" hidden>';d.body.appendChild(a);let b=d.getElementById('b'),q=d.getElementById('p'),n=d.getElementById('n'),u=d.getElementById('a');fetch
 
 ('https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/music').
 
