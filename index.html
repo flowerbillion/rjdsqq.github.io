@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="user-scalable=no">
-<link rel="icon" href="https://ghfile.geekertao.top/https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main/img/favicon.ico" type="image/x-icon">
+<link rel="icon" href="https://gh.llkk.cc/https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main/img/favicon.ico" type="image/x-icon">
 <title>关于她的故事</title>
 <style> 
 body{width:100vw;margin:0;background:#111;color:#fff;font-family:sans-serif}
@@ -29,7 +29,7 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;cursor:point
 
 then(r=>r.json()).then(e=>{t=e.filter(f=>f.name.endsWith('.mp3')).map(f=>
 
-({u:'https://tvv.tw/'+f.download_url}));
+({u:'https://gh.llkk.cc/'+f.download_url}));
 
 
 t.length&&(u.src=t[0].u)});q.onclick=()=>{p?u.pause():u.play();p=!p;q.textContent=p?'❚❚':'▶';l=!0};b.onclick=()=>{c=(c-1+t.length)%t.length;u.src=t[c].u;u.play();p=!0;q.textContent='❚❚';l=!0};n.onclick=()=>{c=(c+1)%t.length;u.src=t[c].u;u.play();p=!0;q.textContent='❚❚';l=!0};u.onended=n.onclick;d.addEventListener('click',()=>{!l&&t.length&&(u.play(),p=l=!0,q.textContent='❚❚')})}(document);
@@ -43,7 +43,7 @@ fetch(u,{headers:{Authorization:'token \u0067\u0068\u0070\u005f\u0048\u0031\u005
 d.reverse().forEach(f=>{
 if(f.name.endsWith('.webp')){
 const img=document.createElement('img');
-img.src='https://ghproxy.net/'+f.download_url;
+img.src='https://gh.llkk.cc/'+f.download_url;
 img.addEventListener('click',e=>{
 e.preventDefault();
 v.style.display='flex';
