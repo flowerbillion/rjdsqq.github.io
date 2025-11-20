@@ -21,7 +21,9 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;cursor:point
 <div id="c"></div>
 <div id="v"><img></div>
 <script>
- 
+ const dt = new Date();
+const cacheKey = `${dt.getFullYear()}${dt.getMonth()}${dt.getDate()}`;
+
  
  
  //悬浮音乐
@@ -31,7 +33,7 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;cursor:point
 
 then(r=>r.json()).then(e=>{t=e.filter(f=>f.name.endsWith('.mp3')).map(f=>
 
-({u:'https://ghproxy.net/'+f.download_url}));
+({ u: `https://gh.llkk.cc/${f.download_url}?v=${cacheKey}` }));
 
 
 t.length&&(u.src=t[0].u)});q.onclick=()=>{p?u.pause():u.play();p=!p;q.textContent=p?'❚❚':'▶';l=!0};b.onclick=()=>{c=(c-1+t.length)%t.length;u.src=t[c].u;u.play();p=!0;q.textContent='❚❚';l=!0};n.onclick=()=>{c=(c+1)%t.length;u.src=t[c].u;u.play();p=!0;q.textContent='❚❚';l=!0};u.onended=n.onclick;d.addEventListener('click',()=>{!l&&t.length&&(u.play(),p=l=!0,q.textContent='❚❚')})}(document);
@@ -45,13 +47,11 @@ fetch(u,{headers:{Authorization:'token \u0067\u0068\u0070\u005f\u0048\u0031\u005
 d.reverse().forEach((f,i)=>{
 if(f.name.endsWith('.webp')){
 const img=document.createElement('img');
-img.loading=i<4?'':'lazy';
+
+img.decoding='async';
 img.onload=()=>img.className='s';
-img.src='https://gh.927223.xyz/'+f.download_url;
-img.onclick=()=>{
-  v.style.display='flex';
-  v.querySelector('img').src=img.src;
-};
+img.src=`https://gh.927223.xyz/${f.download_url}?v=${cacheKey}`;
+img.onclick=()=>(v.style.display='flex',v.querySelector('img').src=img.src);
 c.appendChild(img);
 }
 });
@@ -60,6 +60,7 @@ v.addEventListener('click',()=>v.style.display='none');
 
 
 </script>
+
 
 
 <script>  
@@ -226,9 +227,6 @@ v.addEventListener('click',()=>v.style.display='none');
     }
 
 </script>
-
-
-
 
 
 
