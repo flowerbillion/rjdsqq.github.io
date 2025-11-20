@@ -4,14 +4,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="user-scalable=no">
-<link rel="icon" href="https://gh.llkk.cc/https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main/img/favicon.ico" type="image/x-icon">
 <title>关于她的故事</title>
 <style> 
-body{width:100vw;margin:0;background:#111;color:#fff;font-family:sans-serif}
+body{margin:0;width:100vw;background:#111;color:#fff;font-family:sans-serif}
 #c{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:12px}
-img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;cursor:pointer;-webkit-user-drag:none;user-select:none;-webkit-tap-highlight-color:transparent}
-#v{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center} 
-#v img{width:100%;max-height:90vh;object-fit:contain}
+@media (min-width: 1024px) {#c{grid-template-columns:repeat(4,1fr)}}
+img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;cursor:pointer;-webkit-user-drag:none;user-select:none;-webkit-tap-highlight-color:transparent;opacity:0;transition:1s}
+.s{opacity:1}
+#v{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center}
+#v img{width:100%;max-height:90vh;object-fit:contain;opacity:1;animation:f .3s cubic-bezier(.4,0,.2,1)}
+@keyframes f{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
 </style> 
 <body>
 </head>
@@ -29,7 +31,7 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;cursor:point
 
 then(r=>r.json()).then(e=>{t=e.filter(f=>f.name.endsWith('.mp3')).map(f=>
 
-({u:'https://gh.llkk.cc/'+f.download_url}));
+({u:'https://gh.927223.xyz/'+f.download_url}));
 
 
 t.length&&(u.src=t[0].u)});q.onclick=()=>{p?u.pause():u.play();p=!p;q.textContent=p?'❚❚':'▶';l=!0};b.onclick=()=>{c=(c-1+t.length)%t.length;u.src=t[c].u;u.play();p=!0;q.textContent='❚❚';l=!0};n.onclick=()=>{c=(c+1)%t.length;u.src=t[c].u;u.play();p=!0;q.textContent='❚❚';l=!0};u.onended=n.onclick;d.addEventListener('click',()=>{!l&&t.length&&(u.play(),p=l=!0,q.textContent='❚❚')})}(document);
@@ -40,15 +42,16 @@ t.length&&(u.src=t[0].u)});q.onclick=()=>{p?u.pause():u.play();p=!p;q.textConten
 const u='https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/img/douyin';
 fetch(u,{headers:{Authorization:'token \u0067\u0068\u0070\u005f\u0048\u0031\u0058\u0036\u0062\u0055\u006e\u004f\u0046\u0033\u0071\u005a\u0047\u007a\u0036\u0047\u0053\u0074\u006e\u0043\u0057\u0045\u004c\u0049\u0074\u0072\u005a\u0054\u0034\u0063\u0030\u0041\u0036\u0051\u0067\u0076'}})
 .then(r=>r.json()).then(d=>{
-d.reverse().forEach(f=>{
+d.reverse().forEach((f,i)=>{
 if(f.name.endsWith('.webp')){
 const img=document.createElement('img');
-img.src='https://gh.llkk.cc/'+f.download_url;
-img.addEventListener('click',e=>{
-e.preventDefault();
-v.style.display='flex';
-v.querySelector('img').src=img.src;
-});
+img.loading=i<4?'':'lazy';
+img.onload=()=>img.className='s';
+img.src='https://gh.927223.xyz/'+f.download_url;
+img.onclick=()=>{
+  v.style.display='flex';
+  v.querySelector('img').src=img.src;
+};
 c.appendChild(img);
 }
 });
@@ -56,15 +59,7 @@ c.appendChild(img);
 v.addEventListener('click',()=>v.style.display='none');
 
 
-
-
-
 </script>
-
-
-
-
-
 
 
 <script>  
@@ -231,5 +226,11 @@ v.addEventListener('click',()=>v.style.display='none');
     }
 
 </script>
+
+
+
+
+
+
 </body>
 </html>
