@@ -14,6 +14,8 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;cursor:point
 #v{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center}
 #v img{width:100%;max-height:90vh;object-fit:contain;opacity:1;animation:f .3s cubic-bezier(.4,0,.2,1)}
 @keyframes f{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
+
+.t {font-size:28px; height:80px; text-align:center;line-height:80px;}
 </style> 
 </head>
 <body> 
@@ -86,7 +88,7 @@ function createRainEffect() {
     document.body.appendChild(rainContainer);
 
     // 雨滴数量（根据窗口大小调整）
-    const rainCount = Math.floor(window.innerWidth * window.innerHeight / 4000);
+    const rainCount = Math.floor(window.innerWidth * window.innerHeight / 5500);
     
     // 创建雨滴
     for (let i = 0; i < rainCount; i++) {
@@ -95,7 +97,7 @@ function createRainEffect() {
 
     // 窗口大小改变时调整雨滴数量
     window.addEventListener('resize', function() {
-        const newCount = Math.floor(window.innerWidth * window.innerHeight / 6000);
+        const newCount = Math.floor(window.innerWidth * window.innerHeight / 4000);
         const currentCount = rainContainer.childElementCount;
         
         if (newCount > currentCount) {
@@ -155,9 +157,6 @@ document.head.appendChild(style);
 createRainEffect();
 
 </script>
-
-
-
 <script>  
   let stop;
     const img = new Image();
@@ -322,8 +321,6 @@ createRainEffect();
     }
 
 </script>
-
-
 
 </body>
 </html>
