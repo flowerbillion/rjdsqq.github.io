@@ -95,7 +95,7 @@ function createRainEffect() {
 
     // 窗口大小改变时调整雨滴数量
     window.addEventListener('resize', function() {
-        const newCount = Math.floor(window.innerWidth * window.innerHeight / 1000);
+        const newCount = Math.floor(window.innerWidth * window.innerHeight / 0);
         const currentCount = rainContainer.childElementCount;
         
         if (newCount > currentCount) {
