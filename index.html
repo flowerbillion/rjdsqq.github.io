@@ -1,9 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="user-scalable=no">
+<link rel="shortcut icon" href="https://gh.llkk.cc/https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main/img/favicon.ico" type="image/x-icon">
 <title>关于她的故事</title>
 <style> 
 body{margin:0;width:100vw;background:#111;color:#fff;font-family:sans-serif}
@@ -15,49 +15,144 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;cursor:point
 #v img{width:100%;max-height:90vh;object-fit:contain;opacity:1;animation:f .3s cubic-bezier(.4,0,.2,1)}
 @keyframes f{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
 </style> 
-<body>
 </head>
 <body> 
 <div id="c"></div>
 <div id="v"><img></div>
+<div class="t"></div>
 <script>
- const dt = new Date();
-const cacheKey = `${dt.getFullYear()}${dt.getMonth()}${dt.getDate()}`;
-
- 
- 
- //悬浮音乐
 !function(d){let t=[],c=0,p=!1,l=!1;if(d.getElementById('m-p'))return;let a=d.createElement('div');a.id='m-p';a.style.cssText='position:fixed;bottom:10%;left:50%;transform:translateX(-50%);display:flex;z-index:9999';a.innerHTML='<button id="b" style="font:0px sans-serif;background:0;border:0;color:#fff;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;user-select:none;margin-right:80px">⏮</button><button id="p" style="font:46px sans-serif;background:0;border:0;color:#fff;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;user-select:none">▶</button><button id="n" style="font:0px sans-serif;background:0;border:0;color:#fff;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;user-select:none;margin-left:80px">⏭</button><audio id="a" hidden>';d.body.appendChild(a);let b=d.getElementById('b'),q=d.getElementById('p'),n=d.getElementById('n'),u=d.getElementById('a');fetch
-
 ('https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/music').
-
 then(r=>r.json()).then(e=>{t=e.filter(f=>f.name.endsWith('.mp3')).map(f=>
-
-({ u: `https://gh.llkk.cc/${f.download_url}?v=${cacheKey}` }));
-
-
+({ u: `https://gh.llkk.cc/${f.download_url}` }));
 t.length&&(u.src=t[0].u)});q.onclick=()=>{p?u.pause():u.play();p=!p;q.textContent=p?'❚❚':'▶';l=!0};b.onclick=()=>{c=(c-1+t.length)%t.length;u.src=t[c].u;u.play();p=!0;q.textContent='❚❚';l=!0};n.onclick=()=>{c=(c+1)%t.length;u.src=t[c].u;u.play();p=!0;q.textContent='❚❚';l=!0};u.onended=n.onclick;d.addEventListener('click',()=>{!l&&t.length&&(u.play(),p=l=!0,q.textContent='❚❚')})}(document);
 
-
-
-//图片组件
 const u='https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/img/douyin';
 fetch(u,{headers:{Authorization:'token \u0067\u0068\u0070\u005f\u0048\u0031\u0058\u0036\u0062\u0055\u006e\u004f\u0046\u0033\u0071\u005a\u0047\u007a\u0036\u0047\u0053\u0074\u006e\u0043\u0057\u0045\u004c\u0049\u0074\u0072\u005a\u0054\u0034\u0063\u0030\u0041\u0036\u0051\u0067\u0076'}})
 .then(r=>r.json()).then(d=>{
 d.reverse().forEach((f,i)=>{
 if(f.name.endsWith('.webp')){
 const img=document.createElement('img');
-
 img.decoding='async';
 img.onload=()=>img.className='s';
-img.src=`https://gh.927223.xyz/${f.download_url}?v=${cacheKey}`;
+img.src=`https://gh.927223.xyz/${f.download_url}`;
 img.onclick=()=>(v.style.display='flex',v.querySelector('img').src=img.src);
 c.appendChild(img);
 }
 });
 });
 v.addEventListener('click',()=>v.style.display='none');
+</script>
 
+
+<script>
+//分手时间
+const s = new Date('2025-05-20 20:00:00');
+setInterval(() => {
+  const d = new Date(), diff = d - s,
+        sec = Math.floor(diff / 1000),
+        day = Math.floor(sec / 86400),
+        month = Math.floor(day / 30),     
+        year = Math.floor(month / 12),   
+        remMonth = month % 12,
+        remDay = day % 30,
+        h = Math.floor((sec % 86400) / 3600),
+        m = Math.floor((sec % 3600) / 60),
+        second = sec % 60;
+  
+  let timeStr = '分手距今：';
+  if (year > 0) timeStr += `${year}年`;
+  if (remMonth > 0 || year > 0) timeStr += `${remMonth}月`;
+  if (remDay > 0 || remMonth > 0 || year > 0) timeStr += `${remDay}天`;
+  timeStr += `${h}时${m}分${second}秒`;
+  
+  document.querySelector('.t').textContent = timeStr;
+}, 1000);
+</script>
+
+<script>
+
+// 创建下雨特效
+function createRainEffect() {
+    // 创建雨滴容器
+    const rainContainer = document.createElement('div');
+    rainContainer.style.position = 'fixed';
+    rainContainer.style.top = '0';
+    rainContainer.style.left = '0';
+    rainContainer.style.width = '100%';
+    rainContainer.style.height = '100%';
+    rainContainer.style.pointerEvents = 'none';
+    rainContainer.style.zIndex = '9999';
+    document.body.appendChild(rainContainer);
+
+    // 雨滴数量（根据窗口大小调整）
+    const rainCount = Math.floor(window.innerWidth * window.innerHeight / 5000);
+    
+    // 创建雨滴
+    for (let i = 0; i < rainCount; i++) {
+        createRaindrop(rainContainer);
+    }
+
+    // 窗口大小改变时调整雨滴数量
+    window.addEventListener('resize', function() {
+        const newCount = Math.floor(window.innerWidth * window.innerHeight / 1000);
+        const currentCount = rainContainer.childElementCount;
+        
+        if (newCount > currentCount) {
+            for (let i = 0; i < newCount - currentCount; i++) {
+                createRaindrop(rainContainer);
+            }
+        } else if (newCount < currentCount) {
+            for (let i = 0; i < currentCount - newCount; i++) {
+                if (rainContainer.firstChild) {
+                    rainContainer.removeChild(rainContainer.firstChild);
+                }
+            }
+        }
+    });
+}
+
+// 创建单个雨滴
+function createRaindrop(container) {
+    const raindrop = document.createElement('div');
+    raindrop.style.position = 'absolute';
+    raindrop.style.width = Math.random() * 3 + 0.5 + 'px';
+    raindrop.style.height = Math.random() * 20 + 10 + 'px';
+    raindrop.style.backgroundColor = 'rgba(174, 194, 224, ' + (Math.random() * 0.5 + 0.3) + ')';
+    raindrop.style.left = Math.random() * 100 + '%';
+    raindrop.style.top = -20 + 'px';
+    raindrop.style.borderRadius = '0 0 3px 3px';
+    
+    // 雨滴动画
+    const animationDuration = Math.random() * 1 + 0.5;
+    raindrop.style.animation = `rain-fall ${animationDuration}s linear infinite`;
+    raindrop.style.animationDelay = Math.random() * 2 + 's';
+    
+    // 添加到容器
+    container.appendChild(raindrop);
+}
+
+// 定义雨滴下落动画
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes rain-fall {
+        0% {
+            transform: translateY(-20px) translateX(0);
+            opacity: 1;
+        }
+        70% {
+            opacity: 0.8;
+        }
+        100% {
+            transform: translateY(${window.innerHeight + 20}px) translateX(${Math.random() * 50 - 25}px);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
+
+// 初始化下雨效果
+createRainEffect();
 
 </script>
 
