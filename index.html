@@ -6,42 +6,139 @@
 <link rel="shortcut icon" href="https://gh.llkk.cc/https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main/img/favicon.ico" type="image/x-icon">
 <title>关于她的故事</title>
 <style> 
-body{margin:0;width:100vw;background:#111;color:#fff;font-family:sans-serif}
-#c{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:12px}
-@media (min-width: 1024px) {#c{grid-template-columns:repeat(4,1fr)}}
-img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;cursor:pointer;-webkit-user-drag:none;user-select:none;-webkit-tap-highlight-color:transparent;opacity:0;transition:1s}
+body{margin:0;width:100vw;background:#111;color:#fff;font-family:sans-serif;padding-bottom:110px}
+#c{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:12px;transition:all .3s ease-out}
+#c.g4{grid-template-columns:repeat(4,1fr)}
+@media (min-width: 1024px) {
+    #c{grid-template-columns:repeat(4,1fr)}
+    #c.g4{grid-template-columns:repeat(6,1fr)}
+}
+img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;cursor:pointer;-webkit-user-drag:none;user-select:none;-webkit-tap-highlight-color:transparent;opacity:0;transition:1s}
 .s{opacity:1}
-#v{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center}
-#v img{width:100%;max-height:90vh;object-fit:contain;opacity:1;animation:f .3s cubic-bezier(.4,0,.2,1)}
-@keyframes f{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
 
 .t {font-size:28px; height:80px; text-align:center;line-height:80px;}
+#v{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;z-index:2000}
+#v img{width:100%;max-height:90vh;object-fit:contain;opacity:1;animation:f .3s cubic-bezier(.4,0,.2,1)}
+@keyframes f{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
+.nav {position:fixed;bottom:0;left:0;width:100%;height:100px;background:#0000003a;display:flex;align-items:center;justify-content:space-evenly;z-index:1000;backdrop-filter:blur(10px)}
+.btn {background:0;border:0;color:#fff;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;user-select:none;font-size:40px;padding:10px;transition:.2s}
+.btn:active{transform:scale(.9)}
+.btn-l {font-size:55px}
+#ml {position:fixed;bottom:120px;left:20px;width:340px;max-height:160vh;background:#000000e6;border-radius:16px;overflow-y:auto;display:none;flex-direction:column;z-index:66;backdrop-filter:blur(10px);box-shadow:0 8px 32px #000}
+.mi {padding:20px;text-align:center;border-bottom:1px solid #ffffff2a;font-size:22px;cursor:pointer;transition:.2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mi:last-child {border:0}
+.mi:hover {background:#ffffff20}
+.mi.act {color:#4f9;font-weight:bold;background:#ffffff10}
 </style> 
 </head>
 <body> 
 <div id="c"></div>
 <div id="v"><img></div>
 <div class="t"></div>
+<div id="ml"></div>
+
+<div class="nav">
+    <button id="list" class="btn">♫</button>
+    <button id="b" class="btn btn-l">⏮</button>
+    <button id="p" class="btn">▶</button>
+    <button id="n" class="btn btn-l">⏭</button>
+    <button id="l" class="btn">※</button>
+</div>
+<audio id="a" hidden></audio>
+
 <script>
-!function(d){let t=[],c=0,p=!1,l=!1;if(d.getElementById('m-p'))return;let a=d.createElement('div');a.id='m-p';a.style.cssText='position:fixed;bottom:10%;left:50%;transform:translateX(-50%);display:flex;z-index:9999';a.innerHTML='<button id="b" style="font:56px sans-serif;background:0;border:0;color:#fff;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;user-select:none;margin-right:80px">⏮</button><button id="p" style="font:46px sans-serif;background:0;border:0;color:#fff;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;user-select:none">▶</button><button id="n" style="font:56px sans-serif;background:0;border:0;color:#fff;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;user-select:none;margin-left:80px">⏭</button><audio id="a" hidden>';d.body.appendChild(a);let b=d.getElementById('b'),q=d.getElementById('p'),n=d.getElementById('n'),u=d.getElementById('a');fetch
-('https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/music').
-then(r=>r.json()).then(e=>{t=e.filter(f=>f.name.endsWith('.mp3')).map(f=>
-({ u: `https://gh.llkk.cc/${f.download_url}` }));
-t.length&&(u.src=t[0].u)});q.onclick=()=>{p?u.pause():u.play();p=!p;q.textContent=p?'❚❚':'▶';l=!0};b.onclick=()=>{c=(c-1+t.length)%t.length;u.src=t[c].u;u.play();p=!0;q.textContent='❚❚';l=!0};n.onclick=()=>{c=(c+1)%t.length;u.src=t[c].u;u.play();p=!0;q.textContent='❚❚';l=!0};u.onended=n.onclick;d.addEventListener('click',()=>{!l&&t.length&&(u.play(),p=l=!0,q.textContent='❚❚')})}(document);
+!function(){
+    let t=[],c=0,pl=!1,ia=!1;
+    const b=document.getElementById('b'),
+          q=document.getElementById('p'),
+          n=document.getElementById('n'),
+          u=document.getElementById('a'),
+          lb=document.getElementById('l'),
+          ct=document.getElementById('c'),
+          ls=document.getElementById('list'),
+          ml=document.getElementById('ml');
+
+    lb.onclick=()=>{ct.classList.toggle('g4')};
+    ls.onclick=()=>{
+        if(ml.style.display==='flex'){
+            ml.style.display='none';
+        } else {
+            ml.style.display='flex';
+            const act = ml.querySelector('.act');
+            if(act) act.scrollIntoView({block: "center", behavior: "smooth"});
+        }
+    };
+
+    // 监听窗口滚动，如果列表是打开状态则关闭
+    window.addEventListener('scroll', ()=>{
+        if(ml.style.display==='flex') ml.style.display='none';
+    });
+
+    const pp=()=>{pl?u.pause():u.play();pl=!pl;q.textContent=pl?'❚❚':'▶';ia=!0;upd()};
+    
+    const ld=(i)=>{
+        c=(i+t.length)%t.length;
+        u.src=t[c].u;
+        u.play();
+        pl=!0;
+        q.textContent='❚❚';
+        ia=!0;
+        upd();
+    };
+
+    const upd=()=>{
+        Array.from(ml.children).forEach((el,i)=>{
+            el.className = i===c ? 'mi act' : 'mi';
+        });
+    };
+
+    fetch('https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/music')
+    .then(r=>r.json()).then(e=>{
+        t=e.filter(f=>f.name.endsWith('.mp3')).map(f=>({ 
+            u: `https://gh.llkk.cc/${f.download_url}`,
+            n: f.name.replace(/[^\u4e00-\u9fa5]/g,'') 
+        }));
+        
+        t.forEach((s,i)=>{
+            let d=document.createElement('div');
+            d.className='mi';
+            d.textContent=s.n || '未知曲目';
+            d.onclick=()=>{ld(i);ml.style.display='none'};
+            ml.appendChild(d);
+        });
+
+        if(t.length) {
+            u.src=t[0].u;
+            upd();
+        }
+    });
+
+    q.onclick=pp;
+    b.onclick=()=>{ld(c-1)};
+    n.onclick=()=>{ld(c+1)};
+    u.onended=n.onclick;
+    
+    document.addEventListener('click',(e)=>{
+        if(!ia&&t.length&&!e.target.closest('.btn')&&!e.target.closest('#v')&&!e.target.closest('#ml')){
+            u.play();pl=ia=!0;q.textContent='❚❚';upd();
+        }
+        if(!e.target.closest('#list') && !e.target.closest('#ml')) ml.style.display='none';
+    });
+}();
 
 const u='https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/img/douyin';
 fetch(u,{headers:{Authorization:'token \u0067\u0068\u0070\u005f\u0048\u0031\u0058\u0036\u0062\u0055\u006e\u004f\u0046\u0033\u0071\u005a\u0047\u007a\u0036\u0047\u0053\u0074\u006e\u0043\u0057\u0045\u004c\u0049\u0074\u0072\u005a\u0054\u0034\u0063\u0030\u0041\u0036\u0051\u0067\u0076'}})
 .then(r=>r.json()).then(d=>{
-d.reverse().forEach((f,i)=>{
-if(f.name.endsWith('.webp')){
-const img=document.createElement('img');
-img.decoding='async';
-img.onload=()=>img.className='s';
-img.src=`https://gh.927223.xyz/${f.download_url}`;
-img.onclick=()=>(v.style.display='flex',v.querySelector('img').src=img.src);
-c.appendChild(img);
-}
-});
+    d.reverse().forEach((f)=>{
+        if(f.name.endsWith('.webp')){
+            const img=document.createElement('img');
+            img.decoding='async';
+            img.onload=()=>img.className='s';
+            img.src=`https://gh.927223.xyz/${f.download_url}`;
+            img.onclick=()=>(v.style.display='flex',v.querySelector('img').src=img.src);
+            c.appendChild(img);
+        }
+    });
 });
 v.addEventListener('click',()=>v.style.display='none');
 </script>
@@ -50,7 +147,6 @@ v.addEventListener('click',()=>v.style.display='none');
 <script>
 // 分手时间
 const s = new Date('2025-05-20 20:00:00');
-// 延迟3秒（3000毫秒）后再显示并更新时间
 setTimeout(() => {
   setInterval(() => {
     const d = new Date(), diff = d - s,
@@ -72,7 +168,7 @@ setTimeout(() => {
     
     document.querySelector('.t').textContent = timeStr;
   }, 1000);
-}, 40000); // 3000毫秒=3秒，可修改数值调整延迟时间
+}, 3000); // 3000毫秒=3秒，可修改数值调整延迟时间
 
 </script>
 
@@ -92,7 +188,10 @@ function createRainEffect() {
     document.body.appendChild(rainContainer);
 
     // 雨滴数量（根据窗口大小调整）
+    
+    
     const rainCount = Math.floor(window.innerWidth * window.innerHeight / 5500);
+    
     
     // 创建雨滴
     for (let i = 0; i < rainCount; i++) {
@@ -101,7 +200,11 @@ function createRainEffect() {
 
     // 窗口大小改变时调整雨滴数量
     window.addEventListener('resize', function() {
+    
+    
         const newCount = Math.floor(window.innerWidth * window.innerHeight / 4800);
+        
+        
         const currentCount = rainContainer.childElementCount;
         
         if (newCount > currentCount) {
@@ -325,6 +428,7 @@ createRainEffect();
     }
 
 </script>
+
 
 </body>
 </html>
