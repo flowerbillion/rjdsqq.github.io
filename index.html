@@ -190,7 +190,7 @@ function createRainEffect() {
     // 雨滴数量（根据窗口大小调整）
     
     
-    const rainCount = Math.floor(window.innerWidth * window.innerHeight / 5500);
+    const rainCount = Math.floor(window.innerWidth * window.innerHeight / 5000);
     
     
     // 创建雨滴
@@ -202,7 +202,7 @@ function createRainEffect() {
     window.addEventListener('resize', function() {
     
     
-        const newCount = Math.floor(window.innerWidth * window.innerHeight / 4800);
+        const newCount = Math.floor(window.innerWidth * window.innerHeight / 3600);
         
         
         const currentCount = rainContainer.childElementCount;
