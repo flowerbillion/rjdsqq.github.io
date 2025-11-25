@@ -22,8 +22,8 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;cursor:pointe
 .nav {position:fixed;bottom:0;left:0;width:100%;height:100px;background:#0000003a;display:flex;align-items:center;justify-content:space-evenly;z-index:1000;backdrop-filter:blur(10px)}
 .btn {background:0;border:0;color:#fff;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;user-select:none;font-size:40px;padding:10px;transition:.2s}
 .btn:active{transform:scale(.9)}
-.btn-l {font-size:55px}
-#ml {position:fixed;bottom:120px;left:26px;width:340px;max-height:160vh;background:#000000e6;border-radius:16px;overflow-y:auto;display:none;flex-direction:column;z-index:666;backdrop-filter:blur(10px);box-shadow:0 8px 32px #000}
+.btn-l {font-size:50px}
+#ml {position:fixed;bottom:160px;left:55px;width:360px;max-height:60vh;background:#000000e6;border-radius:16px;overflow-y:auto;display:none;flex-direction:column;z-index:666;backdrop-filter:blur(10px);box-shadow:0 8px 32px #000}
 .mi {padding:28px;text-align:center;border-bottom:1px solid #ffffff2a;font-size:22px;cursor:pointer;transition:.2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mi:last-child {border:0}
 .mi:hover {background:#ffffff20}
@@ -47,7 +47,7 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;cursor:pointe
 
 <script>
 !function(){
-    let t=[],c=0,pl=!1,ia=!1;
+    let t=[],c=0,ia=!1,mp=!1;
     const b=document.getElementById('b'),
           q=document.getElementById('p'),
           n=document.getElementById('n'),
@@ -86,13 +86,25 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;cursor:pointe
         }
     };
 
+    u.onplay = () => {
+        q.textContent = '❚❚';
+        ia = !0;
+        upd();
+    };
+
+    u.onpause = () => {
+        q.textContent = '▶';
+    };
+
     const pp=()=>{
         if(!t.length)return;
-        pl?u.pause():u.play();
-        pl=!pl;
-        q.textContent=pl?'❚❚':'▶';
-        ia=!0;
-        upd();
+        if(u.paused){
+            mp = !1;
+            u.play();
+        }else{
+            mp = !0;
+            u.pause();
+        }
     };
     
     const ld=(i)=>{
@@ -100,18 +112,8 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;cursor:pointe
         c=(i+t.length)%t.length;
         u.src=t[c].u;
         u.load();
-        const p=u.play();
-        if(p!==undefined){
-            p.then(()=>{
-                pl=!0;
-                q.textContent='❚❚';
-                ia=!0;
-                upd();
-            }).catch(()=>{
-                pl=!1;
-                q.textContent='▶';
-            });
-        }
+        mp = !1;
+        u.play();
     };
 
     u.onended = () => {
@@ -155,8 +157,8 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;cursor:pointe
     n.onclick=()=>{ld(c+1)};
     
     document.addEventListener('click',(e)=>{
-        if(!ia&&t.length&&!e.target.closest('.btn')&&!e.target.closest('#v')&&!e.target.closest('#ml')){
-            ld(c);
+        if(!e.target.closest('.btn')&&!e.target.closest('#v')&&!e.target.closest('#ml')){
+            if(t.length && u.paused && !mp) u.play().catch(()=>{});
         }
         if(!e.target.closest('#list') && !e.target.closest('#ml')) ml.style.display='none';
     });
@@ -185,10 +187,7 @@ fetch(gu,{headers:{Authorization:'token \u0067\u0068\u0070\u005f\u0048\u0031\u00
 });
 </script>
 
-
-
 <script>
-// 分手时间最后聊天时间
 const s = new Date('2025-05-20 20:00:00');
 setTimeout(() => {
   setInterval(() => {
@@ -211,9 +210,10 @@ setTimeout(() => {
     
     document.querySelector('.t').textContent = timeStr;
   }, 1000);
-}, 3000); // 3000毫秒=3秒，可修改数值调整延迟时间
-
+}, 5000);
 </script>
+
+
 
 
 
