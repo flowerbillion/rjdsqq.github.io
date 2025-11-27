@@ -1,1393 +1,176 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>&#x5BF9;&#x96EA;&#x8BF4;&#x7684;&#x5FC3;&#x91CC;&#x8BDD;</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #0f1215, #232526);
+            color: #d1d1d1;
+            font-family: 'Noto Serif SC', 'Songti SC', serif;
+            line-height: 1.8;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-x: hidden;
+        }
+
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 3px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 0 0, 0 0;
+            animation: snow 20s linear infinite;
+        }
+
+        @keyframes snow {
+            0% { background-position: 0 0, 0 0, 0 0; }
+            100% { background-position: 550px 1000px, 400px 400px, 300px 300px; }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            padding: 40px 25px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: fadeIn 2s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        h1 {
+            font-weight: 400;
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+            color: #fff;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .intro {
+            font-style: italic;
+            color: #a0a0a0;
+            margin-bottom: 30px;
+            font-size: 15px;
+            text-align: center;
+        }
+
+        p {
+            margin-bottom: 25px;
+            text-align: justify;
+            font-size: 16px;
+            font-weight: 300;
+        }
+
+        .highlight {
+            color: #fff;
+            border-bottom: 1px dashed #555;
+        }
+
+        .outro {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+            color: #999;
+        }
+
+        .outro strong {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #ddd;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                padding: 60px 40px;
+                margin-top: 40px;
+                margin-bottom: 40px;
+                background: rgba(255, 255, 255, 0.03);
+                border-radius: 8px;
+                box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(5px);
+            }
+            p {
+                font-size: 17px;
+            }
+        }
+    </style>
 </head>
-    <title>阚双雪 | 时光的礼物 - 致最爱的你</title>
-    <meta name="description" content="写给阚双雪的深情告白，记录我们共同的回忆、成长与情感历程，传递真挚爱意与思念">
-    <meta name="keywords" content="阚双雪, 时光礼物, 情感告白, 爱情回忆, 思念, 告白信, 爱情故事">
-    <link rel="preload" as="style" crossorigin
-    href="https://fontsapi.zeoseven.com/488/main/result.css"
-    onload="this.rel='stylesheet'"
-    onerror="this.href='https://fontsapi-storage.zeoseven.com/488/main/result.css'" />
-<noscript>
-    <link rel="stylesheet" href="https://fontsapi.zeoseven.com/488/main/result.css" />
-</noscript>
-<style>
-    body {
-       
-        font-family: "STDongGuanTi";
-        font-weight: normal;
-    }
-    
-    * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-:root {
-    --primary-blue: #3498db;
-    --primary-green: #2ecc71;
-    --accent-1: #9b59b6;
-    --accent-2: #f1c40f;
-    --accent-3: #e74c3c;
-    --light-gray: #ecf0f1;
-    --dark-gray: #34495e;
-}
-
-body {
-    line-height: 1.6;
-    color: #333;
-    background-color: var(--light-gray);
-}
-
-/* 导航栏样式 */
-.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 520;
-    padding: 0.5rem 2rem;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-.nav-container {
-    max-width: 1000px;
-    height: 36px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.nav-brand {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.nav-logo {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid rgba(45, 216, 136, 0.815);
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.nav-logo:hover {
-    transform: rotate(15deg) scale(1.1);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-}
-
-.nav-title {
-    font-size: 1.4rem;
-    font-weight: 600;
-    background: linear-gradient(to right, var(--primary-blue), var(--primary-green));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.nav-menu {
-    display: flex;
-    gap: 1.5rem;
-}
-
-.nav-link {
-    color: #444; /* 默认状态使用深色 */
-    text-decoration: none;
-    font-size: 1rem;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    transition: all 0.3s ease;
-    position: relative;
-    background: linear-gradient(to right, #3498db, #2ecc71);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.nav-link::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 2px;
-    background: linear-gradient(to right, #3498db, #2ecc71);
-    transition: width 0.3s ease;
-}
-
-.nav-link:hover {
-    background: linear-gradient(to right, #2980b9, #27ae60);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.nav-link:hover::before {
-    width: 60%;
-}
-
-.nav-link.active {
-    background: linear-gradient(to right, #2471a3, #229954);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    background-color: rgba(255, 255, 255, 0.2);
-}
-
-.nav-link.active::before {
-    width: 60%;
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-    .navbar {
-        padding: 0.5rem 1rem;
-    }
-    
-    .nav-menu {
-        gap: 0.8rem;
-    }
-    
-    .nav-link {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.6rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .nav-brand {
-        gap: 0.5rem;
-        flex-wrap: nowrap;
-        min-width: 0;
-        min-height: 36px;
-    }
-    
-    .nav-title {
-        font-size: 1.1rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 120px;
-        background: linear-gradient(to right, #3498db, #2ecc71);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-    }
-    
-    .nav-logo {
-        width: 32px;
-        height: 32px;
-        flex-shrink: 0;
-    }
-    
-    .nav-container {
-        gap: 0.5rem;
-        position: relative;
-       
-    }
-    
-    .hamburger {
-        display: inline-block;
-        cursor: pointer;
-        background: transparent;
-        border: 0;
-        margin: 0;
-        padding: 10px;
-        z-index: 100;
-    }
-    
-    .hamburger-box {
-        width: 24px;
-        height: 24px;
-        display: inline-block;
-        position: relative;
-    }
-    
-    .hamburger-inner {
-        display: block;
-        top: 50%;
-        margin-top: -2px;
-    }
-    
-    .hamburger-inner,
-    .hamburger-inner::before,
-    .hamburger-inner::after {
-        width: 24px;
-        height: 1px;
-        background:linear-gradient(to right, #3498db, #2ecc71);
-        border-radius: 3px;
-        position: absolute;
-        transition: transform 0.2s ease;
-    }
-    
-    .hamburger-inner::before,
-    .hamburger-inner::after {
-        content: "";
-        display: block;
-    }
-    
-    .hamburger-inner::before {
-        top: -8px;
-    }
-    
-    .hamburger-inner::after {
-        bottom: -8px;
-    }
-    
-    .nav-menu {
-        position: absolute;
-        top: calc(100% + 5px);
-        right: 10px;
-        width: 140px;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(5px);
-        flex-direction: column;
-        padding: 0.3rem 0;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        border-radius: 6px;
-        display: none;
-        overflow: hidden;
-        transform: translateY(-10px);
-        opacity: 0;
-        transition: all 0.3s ease;
-        text-align: center;
-        border: 1px solid rgba(0,0,0,0.05);
-    }
-    
-    .nav-menu.active {
-        display: flex;
-        transform: translateY(0);
-        opacity: 1;
-        animation: fadeInUp 0.3s ease forwards;
-    }
-    
-    .nav-link {
-        display: block;
-        padding: 0.6rem 0.8rem;
-        font-size: 0.9rem;
-        color: #444;
-        transition: all 0.2s ease;
-        border-bottom: 1px solid rgba(0,0,0,0.03);
-    }
-    
-    .nav-link:hover {
-        background-color: #f8f9fa;
-        color: #3498db;
-        transform: translateX(4px);
-    }
-    
-    .nav-link:last-child {
-        border-bottom: none;
-    }
-    
-    .hamburger.active .hamburger-inner {
-        transform: rotate(45deg);
-    }
-    
-    .hamburger.active .hamburger-inner::before {
-        transform: rotate(-90deg) translate(-8px, 0);
-    }
-    
-    .hamburger.active .hamburger-inner::after {
-        opacity: 0;
-    }
-}
-
-/* 主要内容区域 */
-
-/* 轮播图样式 */
-.carousel-container {
-    position: relative;
-    width: 98%;
-    margin: 0 auto;
-    height: 400px;
-    margin-bottom: 30px;
-    overflow: hidden;
-    border-radius: 8px;
-   box-shadow: 2px 2px 16px rgb(63 85 133 / 53%);
-}
-
-.carousel-wrapper {
-    width: 100%;
-    height: 100%;
-    position: relative;
-}
-
-.carousel-slides {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.5s ease-in-out;
-}
-
-.carousel-slide {
-    min-width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-}
-
-.carousel-slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: relative;
-}
-
-.carousel-caption {
-    position: absolute;
-    bottom: 33px;
-    left: 15px;
-    color: white;
-    padding: 5px;
-    text-align: left;
-    font-size: 0.9rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    z-index: 2;
-    box-shadow: 4px 1px 20px rgb(222 221 225 / 24%);
-}
-
-
-.carousel-button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 50px;
-    height: 50px;
-    background-color: rgba(0, 0, 0, 0.0);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    font-size: 24px;
-    cursor: pointer;
-    z-index: 10;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    transition: all 0.3s ease;
-}
-
-.carousel-container:hover .carousel-button {
-    opacity: 1;
-    background-color: rgba(0, 0, 0, 0.3);
-}
-
-.carousel-button.prev {
-    left: 20px;
-}
-
-.carousel-button.next {
-    right: 20px;
-}
-
-.carousel-dots {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 10px;
-}
-
-.carousel-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.5);
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.carousel-dot.active {
-    background-color: white;
-}
-
-@media (max-width: 768px) {
-    .carousel-container {
-        height: 320px;
-    }
-    
-    .carousel-button {
-        width: 40px;
-        height: 40px;
-        font-size: 20px;
-    }
-}
-
-@media (max-width: 480px) {
-    .carousel-container {
-        height: 194px;
-    }
-    
-    .carousel-button {
-        width: 30px;
-        height: 30px;
-        font-size: 16px;
-    }
-}
-
-/* 选项卡样式 */
-.tabs {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 30px;
-    position: relative;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    background-color: #f8f9fa;
-    padding: 5px;
-    flex-wrap: nowrap;
-    width: 96%;
-    margin:  auto;
-}
-
-.tab-button {
-    padding: 15px 0;
-    background-color: transparent;
-    color: #555;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    flex: 1;
-    text-align: center;
-    font-weight: 600;
-    font-size: 1.3rem;
-    position: relative;
-    z-index: 1;
-    border-radius: 8px;
-    margin: 0 5px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.tab-button:hover {
-    color: #2ecc71;
-    background-color: rgba(46, 204, 113, 0.05);
-}
-
-.tab-button.active {
-    color: #fff;
-    background: linear-gradient(to right, #3498db, #2ecc71);
-    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
-    transform: translateY(-2px);
-}
-
-.tab-button::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 0;
-    height: 3px;
-    background: linear-gradient(to right, #3498db, #2ecc71);
-    transition: all 0.3s ease;
-    transform: translateX(-50%);
-    opacity: 0;
-}
-
-.tab-button:hover::after {
-    width: 70%;
-    opacity: 1;
-}
-
-.tab-button.active::after {
-    opacity: 0;
-}
-
-.tab-content {
-    font-size: 1.1rem;
-    color: #144238;
-   margin-top: 15px;
-    
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.01);
-    
-    display: none;
-    transform: translateY(10px);
-    opacity: 0;
-    transition: all 0.3s ease;
-    /*border: 1px solid rgba(0, 0, 0, 0.05); */
-}
-
-.tab-content.active {
-    display: block;
-    transform: translateY(0);
-    opacity: 1;
-    animation: fadeInUp 0.5s ease forwards;
-    padding: 12px;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.tab-content h2 {
-    margin-bottom: 20px;
-    color: #2c3e50;
-    font-weight: 600;
-    border-bottom: 2px solid #f0f0f0;
-    padding-bottom: 10px;
-    position: relative;
-}
-
-.tab-content h2::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 50px;
-    height: 2px;
-    background: linear-gradient(to right, #3498db, #2ecc71);
-    transition: width 0.3s ease;
-}
-
-.tab-content.active h2::after {
-    width: 100px;
-}
-
-.tab-content p {
-    color:#144238;
-    line-height: 1.8;
-    margin-bottom: 15px;
-    font-size: 1rem;
-    text-align: justify;
-    letter-spacing: 0.3px;
-}
-
-.tab-content ul, .tab-content ol {
-    padding-left: 20px;
-    margin-bottom: 15px;
-}
-
-.tab-content li {
-    margin-bottom: 8px;
-    color: #555;
-}
-
-.tab-content img {
-    max-width: 100%;
-    height: auto;
-    margin: 0 0;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-}
-
-.tab-content img:hover {
-    transform: scale(1.02);
-}
-
-.tab-content a {
-    color: #3498db;
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: border-color 0.3s ease, color 0.3s ease;
-}
-
-.tab-content a:hover {
-    color: #2ecc71;
-    border-bottom-color: #2ecc71;
-}
-
-/* 图片展示区域样式 */
-#message {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 25px;
-    padding: 0px 0;
-    margin:  0 auto;
-    border-radius: 5px;
-    width:100% ;
-    margin-bottom: 30px;
-    display: none;
-    margin-top: 30px;
-    align-items: center;
-}
-
-#message.active {
-    display: grid;
-}
-
-.image-container {
-    margin: auto;
-    width: 100%;
-    background-color:rgb(49 90 169 / 3%);
-    padding: 0px;
-    border-radius: 0px;
-    box-shadow: 4px 5px 10px rgb(178 195 185 / 70%);
-}
-
-.landscape-image {
-    width: 100%;
-    height: auto;
-    margin-bottom: 10px;
-   
-}
-
-.subtitle {
-    text-align: center;
-    font-size: 1rem;
-    color: #144238;
-    margin: 8px 0px 16px;
-    text-align: center;
-    
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-    .main-content {
-        padding: 10px;
-    }
-
-    .tabs {
-        padding: 5px;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-    }
-
-    .tab-button {
-        padding: 12px 10px;
-        font-size: 0.9rem;
-        margin: 0 3px;
-        flex: 1;
-        min-width: 0;
-    }
-
-    .tab-content {
-        padding: 20px;
-    }
-
-    #message {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 480px) {
-    .tabs {
-        padding: 4px;
-    }
-    
-    .tab-button {
-        padding: 10px 5px;
-        font-size: 0.9rem;
-        margin: 0 2px;
-    }
-    
-    .tab-content {
-        padding: 15px;
-        border-radius: 8px;
-    }
-    
-    .tab-content h2 {
-        font-size: 1.1rem;
-    }
-}
-
-/* 页面整体美化 */
-.main-content {
-    max-width: 1000px;
-    margin: 70px auto 30px auto; /* 调整上边距适应新导航栏 */
-    padding: 30px 0px;
-  /*  background-color: rgba(255, 255, 255, 0.95);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);*/
-    border-radius: 15px;
-    
-    backdrop-filter: blur(10px);
-    position: relative;
-    overflow: hidden;
-}
-
-
-
-/* 美化滚动条 */
-::-webkit-scrollbar {
-    width: 2px;
-}
-
-::-webkit-scrollbar-track {
-    background:#19d367;
-    border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb {
-    background: linear-gradient(to right, #3498db, #2ecc71);
-    border-radius: 5px;
-    transition: background 0.3s ease;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(to right, #2980b9, #27ae60);
-}
-
-/* 文本选择样式 */
-::selection {
-    background: rgba(52, 152, 219, 0.2);
-    color: #2c3e50;
-}
-
-/* 页面背景 */
-body {
-    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
-    min-height: 100vh;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-/* 添加页面过渡效果 */
-.main-content {
-    animation: pageLoad 0.6s ease-out;
-}
-
-@keyframes pageLoad {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* 响应式调整 */
-@media (max-width: 768px) {
-    .main-content {
-            margin: 58px auto 15px auto; /* 在小屏幕上保持足够的上边距 */
-            padding: 20px 15px;
-        }
-    
-    body {
-        padding: 10px;
-    }
-}
-
-/* 音乐播放按钮样式 */
-.music-button {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: linear-gradient(to right, #3498db, #2ecc71);
-    color: white;
-    border: none;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 920;
-    transition: all 0.3s ease;
-}
-.music-button:hover {
-    transform: scale(1.1);
-    background: linear-gradient(to right, #2980b9, #27ae60);
-}
-
-.music-button i {
-    font-size: 24px;
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-}
-
-.music-button.playing {
-    animation: pulse 2s infinite;
-    background: linear-gradient(to right, #2ecc71, #3498db);
-    
-}
-
-/* 添加图标字体 */
-.icon {
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-/* 播放暂停按钮样式 */
-.icon-play {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E");
-}
-
-.icon-pause {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M6 19h4V5H6v14zm8-14v14h4V5h-4z'/%3E%3C/svg%3E");
-}
-
-
-    
-    .loader-container {
-        position: relative; /* 改为相对定位 */
-        width: 100%; /* 宽度100% */
-        height: 100%; /* 高度100% */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10; 
-        transition: opacity 0.5s ease;
-    }
-    
-
-    
-    /* 现代化加载动画主体 */
-    .modern-loader {
-        position: relative;
-        width: 120px;
-        height: 120px;
-    }
-    
-    /* 中心圆 */
-    .modern-loader::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 60px;
-        height: 60px;
-        background: linear-gradient(135deg, #6e8efb, #a777e3);
-        border-radius: 50%;
-        animation: pulse 1.5s ease-in-out infinite;
-        box-shadow: 0 0 20px rgba(107, 142, 251, 0.5);
-    }
-    
-    /* 粒子效果 */
-    .particle {
-        position: absolute;
-        width: 12px;
-        height: 12px;
-        background: linear-gradient(135deg, #6e8efb, #a777e3);
-        border-radius: 50%;
-        animation: particle-animation 2s ease-in-out infinite;
-    }
-    
-    /* 8个粒子位置 */
-    .particle:nth-child(1) { top: 10%; left: 50%; animation-delay: 0s; }
-    .particle:nth-child(2) { top: 25%; left: 85%; animation-delay: 0.2s; }
-    .particle:nth-child(3) { top: 60%; left: 90%; animation-delay: 0.4s; }
-    .particle:nth-child(4) { top: 85%; left: 50%; animation-delay: 0.6s; }
-    .particle:nth-child(5) { top: 60%; left: 10%; animation-delay: 0.8s; }
-    .particle:nth-child(6) { top: 25%; left: 15%; animation-delay: 1s; }
-    .particle:nth-child(7) { top: 10%; left: 50%; animation-delay: 1.2s; }
-    .particle:nth-child(8) { top: 40%; left: 85%; animation-delay: 1.4s; }
-    
-    /* 加载文字 */
-    .loader-text {
-        position: absolute;
-        margin-top: 140px;
-        color: #555;
-        font-size: 16px;
-        letter-spacing: 2px;
-        font-weight: 500;
-    }
-    
-    /* 脉冲动画 */
-    @keyframes pulse {
-        0% { transform: translate(-50%, -50%) scale(1); }
-        50% { transform: translate(-50%, -50%) scale(1.1); }
-        100% { transform: translate(-50%, -50%) scale(1); }
-    }
-    
-    /* 粒子动画 */
-    @keyframes particle-animation {
-        0% { 
-            transform: scale(0.8) translate(0, 0); 
-            opacity: 0.5;
-        }
-        50% { 
-            transform: scale(1.2) translate(20px, -20px); 
-            opacity: 1;
-        }
-        100% { 
-            transform: scale(0.8) translate(0, 0); 
-            opacity: 0.5;
-        }
-    }
-    
-
-
-</style>
- <!-- https://fonts.zeoseven.com/ -->
-</head>
-
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-brand">
-                
-                <span class="nav-title">❄️</span>
-            </div>
-            <button class="hamburger" aria-label="菜单">
-                <span class="hamburger-box">
-                    <span class="hamburger-inner"></span>
-                </span>
-            </button>
-            <div class="nav-menu">
-                <a href="#" class="nav-link active">首页</a>
-                <a href="" class="nav-link">1.0最初版</a>
-                <a href="" class="nav-link">1.0开发版</a>
-                <a href="" class="nav-link">1.0发行版</a>
-                                <a href="" class="nav-link">2.0最初版</a>
-                <a href="" class="nav-link">2.0开发版</a>
-                <a href="" class="nav-link">2.0发行版</a>
-            </div>
-        </div>
-    </nav>
-    
-    
 
-    <div class="main-content">
-    
-        <!-- 轮播图 -->
-        <div class="carousel-container">
-        <div class="loader-container" id="loaderContainer">
-    <div class="modern-loader">
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-    </div>
-    <div class="loader-text">系统加载中...</div>
-</div>
-            <div class="carousel-wrapper">
-                
-                <div class="carousel-slides">
-                
-                </div>
-            </div>
-            <button class="carousel-button prev" aria-label="上一张">&lt;</button>
-            <button class="carousel-button next" aria-label="下一张">&gt;</button>
-            <div class="carousel-dots">
-                
-            </div>
+    <div class="bg-animation"></div>
+
+    <div class="container">
+        <!-- 标题：对雪说的心里话 -->
+        <h1>&#x5BF9;&#x96EA;&#x8BF4;&#x7684;&#x5FC3;&#x91CC;&#x8BDD;</h1>
+        
+        <!-- 开篇：心里的话，爱你我选择不再挽回 -->
+        <div class="intro">
+            &#x5F00;&#x7BC7;&#xFF1A;&#x5FC3;&#x91CC;&#x7684;&#x8BDD;&#xFF0C;&#x7231;&#x4F60;&#x6211;&#x9009;&#x62E9;&#x4E0D;&#x518D;&#x633D;&#x56DE;
         </div>
 
-        <div class="tabs">
-            <button class="tab-button active" onclick="showTab('text1')">随笔</button>
-            <button class="tab-button" onclick="showTab('text2')">理解</button>
-            <button class="tab-button" onclick="showTab('text3')">故事</button>
-            <button class="tab-button" onclick="showTab('message')">相册</button>
-        </div>
+        <!-- 正文段落 -->
+        <p>
+            &#x6211;&#x4F9D;&#x7A00;&#x8BB0;&#x5F97;&#x4F60;&#x8BF4;&#x8FC7;&#xFF0C;&#x4EE5;&#x524D;&#x5206;&#x624B;&#x6CA1;&#x6709;&#x53BB;&#x627E;&#x4F60;&#xFF0C;&#x6CA1;&#x6709;&#x633D;&#x56DE;&#x4F60;&#xFF0C;&#x8FD9;&#x6B21;&#x6211;&#x505A;&#x4E86;&#xFF0C;&#x867D;&#x7136;&#x7ED3;&#x679C;&#x4E0D;&#x7F8E;&#x597D;&#xFF0C;&#x6211;&#x4E5F;&#x5766;&#x7136;&#x63A5;&#x53D7;&#xFF0C;&#x81F3;&#x5C11;&#x505A;&#x548C;&#x4E0D;&#x505A;&#x662F;&#x4E24;&#x56DE;&#x4E8B;&#x3002;
+        </p>
 
-        <div id="text1" class="tab-content active">
-            <h2>请稍等...</h2>
-            <p>正在加载相关内容...</p>
-        </div>
+        <p>
+            &#x5728;&#x4F60;&#x5BB6;&#x697C;&#x4E0B;&#x6211;&#x8BF4;&#x5206;&#x624B;&#x90A3;&#x65F6;&#xFF0C;&#x6211;&#x65E9;&#x6709;&#x9884;&#x611F;&#x6211;&#x4EEC;&#x5F88;&#x96BE;&#x6709;&#x7ED3;&#x679C;&#xFF0C;&#x6211;&#x4E5F;&#x60F3;&#x5230;&#x4E86;&#x5982;&#x4ECA;&#x8FD9;&#x4E2A;&#x5C40;&#x9762;&#x3002;
+        </p>
 
-        <div id="text2" class="tab-content">
-            <h2>请稍等...</h2>
-            <p>正在加载相关内容...</p>
-        </div>
+        <p>
+            &#x6211;&#x6709;&#x60F3;&#x8FC7;&#x4F1A;&#x5BF9;&#x4F60;&#x4E0D;&#x597D;&#xFF0C;&#x6211;&#x4E0D;&#x591F;&#x6210;&#x719F;&#xFF0C;&#x4E0D;&#x591F;&#x7A33;&#x91CD;&#xFF0C;&#x4E0D;&#x591F;&#x5173;&#x5FC3;&#xFF0C;&#x8BF4;&#x771F;&#x7684;&#x4F60;&#x8BF4;&#x5206;&#x624B;&#xFF0C;&#x6211;&#x4E0D;&#x540E;&#x6094;&#x540C;&#x610F;&#xFF0C;&#x56E0;&#x4E3A;&#x6211;&#x77E5;&#x9053;&#x4F60;&#x80FD;&#x9047;&#x5230;&#x66F4;&#x597D;&#x7684;&#x4EBA;&#x3002;&#x6211;&#x4EE5;&#x524D;&#x603B;&#x662F;&#x8BA9;&#x81EA;&#x5DF1;&#x8BB0;&#x4F4F;&#x5BF9;&#x4F60;&#x521D;&#x5FC3;&#xFF0C;&#x5728;&#x4E00;&#x8D77;&#x4E45;&#x4E86;&#xFF0C;&#x603B;&#x662F;&#x4F1A;&#x6162;&#x6162;&#x9057;&#x5FD8;&#x81EA;&#x5DF1;&#x7684;&#x521D;&#x5FC3;&#xFF0C;&#x5BF9;&#x4F60;&#x8BF4;&#x58F0;&#x62B1;&#x6B49;&#xFF0C;&#x5BF9;&#x4E0D;&#x8D77;&#x3002;
+        </p>
 
-        <div id="text3" class="tab-content">
-            <h2>请稍等...</h2>
-            <p>正在加载相关内容...</p>
-        </div>
+        <p>
+            &#x589E;&#x51E0;&#x4F55;&#x65F6;&#x4E5F;&#x89C9;&#x5F97;&#x81EA;&#x5DF1;&#x5BF9;&#x4F60;&#x7684;&#x7231;&#xFF0C;&#x6D77;&#x8A93;&#x5C71;&#x76DF;&#xFF0C;&#x81F3;&#x6B7B;&#x4E0D;&#x6E1D;&#xFF0C;&#x6162;&#x6162;&#x53D1;&#x73B0;&#x81EA;&#x5DF1;&#x7684;&#x4E0D;&#x8DB3;&#x548C;&#x7F3A;&#x70B9;&#xFF0C;&#x624D;&#x660E;&#x767D;&#xFF0C;&#x7231;&#x4E00;&#x4E2A;&#x4EBA;&#xFF0C;&#x8981;&#x80FD;&#x7ED9;&#x5979;&#x4E00;&#x4E2A;&#x6E29;&#x6696;&#x7684;&#x5BB6;&#xFF0C;&#x907F;&#x98CE;&#x7684;&#x6E2F;&#x6E7E;&#xFF0C;&#x5FC3;&#x7075;&#x7684;&#x6811;&#x6D1E;&#xFF0C;&#x4F24;&#x5FC3;&#x65F6;&#x7684;&#x5B89;&#x6170;&#xFF0C;&#x8DB3;&#x591F;&#x7684;&#x8D22;&#x5BCC;&#xFF0C;&#x968F;&#x65F6;&#x966A;&#x4F34;&#xFF0C;&#x6211;&#x51E0;&#x4E4E;&#x90FD;&#x6CA1;&#x505A;&#x5230;&#xFF0C;&#x5E76;&#x4E14;&#x8FD8;&#x5F88;&#x5DEE;&#x52B2;&#x3002;&#x9047;&#x5230;&#x95EE;&#x9898;&#xFF0C;&#x9996;&#x5148;&#x8981;&#x89E3;&#x51B3;&#x7684;&#x662F;&#x4F60;&#xFF0C;&#x6211;&#x77E5;&#x9053;&#x81EA;&#x5DF1;&#x5F88;&#x5DEE;&#x52B2;&#xFF0C;&#x914D;&#x4E0D;&#x4E0A;&#x5982;&#x6B64;&#x5B8C;&#x7F8E;&#x7684;&#x4F60;&#xFF0C;&#x8D8A;&#x63A8;&#x8D8A;&#x8FDC;&#xFF0C;&#x6211;&#x5351;&#x5FAE;&#xFF0C;&#x6211;&#x81EA;&#x8D23;&#xFF0C;&#x6211;&#x65E0;&#x529B;&#x6539;&#x53D8;&#xFF0C;&#x6539;&#x4E5F;&#x6539;&#x4E0D;&#x597D;&#xFF0C;&#x4E5F;&#x6CA1;&#x597D;&#x597D;&#x6539;&#x8FC7;&#xFF08;&#x8DEA;&#x4E0B;&#x8BA4;&#x4E2A;&#x9519;&#xFF09;
+        </p>
 
-        <div id="message" class="tab-content">
-            <h2>请稍等...</h2>
-            <p>正在加载图片内容...</p>
+        <p>
+            &#x6211;&#x521D;&#x604B;&#x5206;&#x624B;&#x65F6;&#x5019;&#x4ED6;&#x4E5F;&#x627E;&#x8FC7;&#x51E0;&#x6B21;&#x6211;&#xFF0C;&#x8BF4;&#x548C;&#x597D;&#xFF0C;&#x6211;&#x90FD;&#x662F;&#x76F4;&#x63A5;&#x62C9;&#x9ED1;&#xFF0C;&#x7EDD;&#x60C5;&#x7684;&#x505A;&#x6CD5;&#x3002;&#x867D;&#x7136;&#x4F60;&#x4E0D;&#x662F;&#x6211;&#x7684;&#x521D;&#x604B;&#xFF0C;&#x4F46;&#x5728;&#x90A3;&#x65F6;&#x6211;&#x6700;&#x96BE;&#x8FC7;&#x7684;&#x65F6;&#x5019;&#x4F60;&#x5B89;&#x6170;&#x8FC7;&#x6211;&#xFF0C;&#x9F13;&#x52B1;&#x8FC7;&#x6211;&#xFF0C;&#x76F8;&#x4FE1;&#x8FC7;&#x6211;&#xFF0C;&#x613F;&#x610F;&#x548C;&#x6211;&#x5728;&#x4E00;&#x8D77;&#xFF0C;&#x7231;&#x7684;&#x6D01;&#x767D;&#x65E0;&#x7455;&#xFF0C;&#x65E0;&#x4E0E;&#x4F26;&#x6BD4;&#xFF0C;&#x5C31;&#x662F;&#x6211;&#x7684;&#x767D;&#x6708;&#x5149;&#x3002;&#x6211;&#x5F88;&#x6000;&#x604B;&#x4ECE;&#x524D;&#xFF0C;&#x90A3;&#x65F6;&#x5019;&#x7684;&#x4F60;&#x8BA9;&#x6211;&#x7231;&#x4F60;&#x5230;&#x4E86;&#x73B0;&#x5728;&#x3002;&#x4F60;&#x4E0D;&#x7BA1;&#x8BF4;&#x4EC0;&#x4E48;&#x6211;&#x90FD;&#x8FD8;&#x613F;&#x610F;&#x627E;&#x4F60;&#x5462;&#xFF1F;&#x56E0;&#x4E3A;&#x6211;&#x968F;&#x65F6;&#x80FD;&#x611F;&#x53D7;&#x5230;&#x4F60;&#x66FE;&#x7ECF;&#x90A3;&#x65F6;&#x7231;&#x6211;&#x7684;&#x611F;&#x89C9;&#xFF0C;&#x4E0D;&#x66FE;&#x5FD8;&#x8BB0;&#xFF0C;&#x65E0;&#x6CD5;&#x5FD8;&#x8BB0;&#xFF0C;&#x968F;&#x7740;&#x6211;&#x7684;&#x4E00;&#x751F;&#x76F4;&#x5230;&#x6C38;&#x8FDC;&#x3002;
+        </p>
+
+        <p>
+            &#x971C;&#x96EA;&#x662F;&#x6700;&#x597D;&#x7684;&#x5973;&#x5B69;&#xFF0C;&#x56E0;&#x4E3A;&#x5982;&#x6B64;&#xFF0C;&#x5F80;&#x540E;&#x6211;&#x4F1A;&#x5C65;&#x884C;&#x627F;&#x8BFA;&#xFF0C;&#x4E0D;&#x4F1A;&#x627E;&#x4F60;&#x518D;&#x8BF4;&#x5728;&#x4E00;&#x8D77;&#x548C;&#x597D;&#xFF0C;&#x6211;&#x4E0D;&#x662F;&#x89C9;&#x5F97;&#x81EA;&#x5DF1;&#x6709;&#x591A;&#x9AD8;&#x5C1A;&#xFF0C;&#x591A;&#x6DF1;&#x60C5;&#x3002;&#x7ECF;&#x5386;&#x4E86;&#x8FD9;&#x4E48;&#x591A;&#x4E8B;&#xFF0C;&#x6211;&#x660E;&#x767D;&#x4E86;&#x6211;&#x7684;&#x51FA;&#x73B0;&#x5C31;&#x662F;&#x4E16;&#x754C;&#x7684;&#x4E00;&#x4E2A;&#x9519;&#x8BEF;&#x3002;
+        </p>
+
+        <p>
+            &#x6211;&#x5E0C;&#x671B;&#x4F60;&#x80FD;&#x628A;&#x6211;&#x7684;&#x6240;&#x6709;&#x8054;&#x7CFB;&#x65B9;&#x5F0F;&#x62C9;&#x9ED1;&#xFF0C;&#x4E0D;&#x8981;&#x7559;&#x4E00;&#x4E1D;&#x7F1D;&#x9699;&#xFF0C;&#x4E3A;&#x4F60;&#x597D;&#xFF0C;&#x4E5F;&#x8BA9;&#x6211;&#x4E0D;&#x518D;&#x4E3A;&#x6B64;&#x72AF;&#x4E0B;&#x66F4;&#x591A;&#x7684;&#x9519;&#x8BEF;&#xFF0C;&#x4F60;&#x4E5F;&#x653E;&#x5FC3;&#xFF0C;&#x6211;&#x4E0D;&#x4F1A;&#x5BF9;&#x5916;&#x8BF4;&#x6211;&#x4EEC;&#x4E4B;&#x95F4;&#x7684;&#x8FC7;&#x5F80;&#xFF0C;&#x672A;&#x6765;&#x7684;&#x8DEF;&#x9700;&#x8981;&#x4F60;&#x81EA;&#x5DF1;&#x8D70;&#x4E86;&#xFF0C;&#x52A0;&#x6CB9;&#x55F7;&#x3002;
+        </p>
+
+        <p>
+            &#x5206;&#x624B;&#x7684;&#x8FD9;6&#x4E2A;&#x6708;&#x4EE5;&#x6765;&#xFF0C;&#x9664;&#x4E86;&#x521A;&#x5F00;&#x59CB;&#x7684;&#x633D;&#x56DE;&#x5916;&#xFF0C;&#x5982;&#x4ECA;&#x52A0;&#x4F60;&#x597D;&#x53CB;&#x4E5F;&#x53EA;&#x662F;&#x60F3;&#x4F60;&#x4E86;&#xFF0C;&#x60F3;&#x627E;&#x4F60;&#x804A;&#x804A;&#x5929;&#xFF0C;&#x4F60;&#x4EE5;&#x524D;&#x8BF4;&#x6211;&#x6709;&#x65F6;&#x95F4;&#x90FD;&#x4E0D;&#x56DE;&#x4F60;&#x6D88;&#x606F;&#xFF0C;&#x73B0;&#x5728;&#x6211;&#x4E5F;&#x80FD;&#x660E;&#x767D;&#x4F60;&#x66FE;&#x7ECF;&#x8BF4;&#x8FC7;&#x8BDD;&#x6700;&#x6839;&#x672C;&#x7684;&#x542B;&#x4E49;&#xFF0C;&#x611F;&#x53D7;&#x4E0D;&#x5230;&#x7231;&#x3002;&#x5931;&#x843D;&#xFF0C;&#x70E6;&#x8E81;&#xFF0C;&#x5FE7;&#x4F24;&#x3002;&#x5F88;&#x660E;&#x663E;&#x6211;&#x505A;&#x7684;&#x5F88;&#x5DEE;&#xFF0C;&#x6211;&#x4E5F;&#x4E0D;&#x662F;&#x5E0C;&#x671B;&#x5199;&#x7BC7;&#x5C0F;&#x4F5C;&#x6587;&#x8BA9;&#x4F60;&#x56DE;&#x5FC3;&#x8F6C;&#x610F;&#xFF0C;&#x6211;&#x5462;&#xFF0C;&#x5DF2;&#x7ECF;&#x60F3;&#x597D;&#x4E86;&#xFF0C;&#x7528;&#x6B64;&#x523B;&#x6700;&#x5E73;&#x9759;&#x7684;&#x5FC3;&#x5199;&#x7684;&#x8FD9;&#x7BC7;&#xFF0C;&#x627E;&#x4E2A;&#x66F4;&#x597D;&#x7684;&#x3002;
+        </p>
+
+        <div class="outro">
+            <!-- 结语 -->
+            <strong>&#x7ED3;&#x8BED;</strong>
+            &#x4F60;&#x662F;&#x6700;&#x597D;&#x7684;&#x5973;&#x5B69;&#xFF0C;&#x4E5F;&#x662F;&#x6211;&#x7684;&#x767D;&#x6708;&#x5149;&#xFF0C;&#x5E0C;&#x671B;&#x4F60;&#x7ECF;&#x5386;&#x4E86;&#x8FD9;&#x4E9B;&#x4EE5;&#x540E;&#xFF0C;&#x5728;&#x672A;&#x6765;&#x7684;&#x65E5;&#x5B50;&#x91CC;&#x9047;&#x5230;&#x6B64;&#x7C7B;&#x611F;&#x60C5;&#xFF0C;&#x80FD;&#x591F;&#x6210;&#x957F;&#x5E76;&#x597D;&#x597D;&#x7684;&#x4FDD;&#x62A4;&#x597D;&#x81EA;&#x5DF1;&#x4E0D;&#x53D7;&#x4F24;&#x5BB3;&#xFF0C;&#x5728;&#x6B64;&#x8877;&#x5FC3;&#x7684;&#x795D;&#x613F;&#x4F60;&#xFF0C;&#x80FD;&#x627E;&#x4E2A;&#x6709;&#x94B1;&#x6709;&#x989C;&#x53C8;&#x5BA0;&#x4F60;&#x7684;&#x767D;&#x9A6C;&#x738B;&#x5B50;&#xFF0C;&#x6709;&#x70B9;&#x63EA;&#x5FC3;&#x4F46;&#x6CA1;&#x4E8B;&#x3002;
         </div>
     </div>
-
-    <!-- 音乐播放器 -->
-    <audio id="music-player" loop>
-        <source src="https://gh.ptoe.cc/https://raw.githubusercontent.com/rjdsq/ksx/main/music/赞美愚者.mp3" type="audio/mpeg">
-        您的浏览器不支持音频元素。
-    </audio>
-    
-    <!-- 音乐播放按钮 -->
-    <button id="music-button" class="music-button" title="播放/暂停音乐">
-        <span class="icon icon-play"></span>
-    </button>
-    <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-menu');
-    
-    if (hamburger && navMenu) {
-        hamburger.addEventListener('click', function() {
-            navMenu.classList.toggle('active');
-            this.classList.toggle('active');
-        });
-        
-        document.addEventListener('click', function(event) {
-            if (!navMenu.contains(event.target) && 
-                !hamburger.contains(event.target) && 
-                navMenu.classList.contains('active')) {
-                navMenu.classList.remove('active');
-                hamburger.classList.remove('active');
-            }
-        });
-    }
-});
-function showTab(tabId) {
-    document.querySelectorAll('.tab-content, #message').forEach(element => {
-        element.classList.remove('active');
-    });
-    
-    document.querySelectorAll('.tab-button').forEach(button => {
-        button.classList.remove('active');
-    });
-    
-    document.getElementById(tabId).classList.add('active');
-    
-    document.querySelector(`button[onclick="showTab('${tabId}')"]`).classList.add('active');
-}
-document.addEventListener('DOMContentLoaded', function() {
-    showTab('text1');
-    const musicPlayer = document.getElementById('music-player');
-    const musicButton = document.getElementById('music-button');
-    const musicIcon = musicButton.querySelector('.icon');
-    
-    musicPlayer.loop = true;
-    
-    musicButton.addEventListener('click', function() {
-        if (musicPlayer.paused) {
-            musicPlayer.play().then(() => {
-                musicIcon.classList.remove('icon-play');
-                musicIcon.classList.add('icon-pause');
-                musicButton.classList.add('playing');
-            }).catch(error => {
-                console.error('播放失败:', error);
-            });
-        } else {
-            musicPlayer.pause();
-            musicIcon.classList.remove('icon-pause');
-            musicIcon.classList.add('icon-play');
-            musicButton.classList.remove('playing');
-        }
-    });
-    musicPlayer.addEventListener('ended', function() {
-        musicIcon.classList.remove('icon-pause');
-        musicIcon.classList.add('icon-play');
-        musicButton.classList.remove('playing');
-    });
-});
-</script>
-    
-<script>
-    // 加载动画
-    document.addEventListener('DOMContentLoaded', function() {
-        if (!window.loaderAnimated) {
-            window.loaderAnimated = true;
-            window.addEventListener('load', function() {
-                clearTimeout(window.loaderTimeout);
-                hideLoader();
-            });
-            window.loaderTimeout = setTimeout(function() {
-                hideLoader();
-            }, 15000); // 最多等待5秒
-        }
-    });
-    
-    // 隐藏加载动画的函数
-    function hideLoader() {
-        var loaderContainer = document.getElementById('loaderContainer');
-        var carouselContainer = document.querySelector('.carousel-container');
-        
-        if (loaderContainer && carouselContainer) {
-            loaderContainer.style.opacity = '0';
-            setTimeout(function() {
-                if (loaderContainer) {
-                    loaderContainer.style.display = 'none';
-                }
-                // 显示轮播图
-                if (carouselContainer) {
-                    carouselContainer.style.opacity = '1';
-                }
-            }, 500);
-        }
-    }
-</script>
-
-
-<script>
-//相册
-
-
-const imageConfig = {
-    baseUrl: 'https://api.github.com/repos/rjdsq/ksx/contents/',
-    imagePath: 'img/yunnan/',
-    token: '\u0067\u0068\u0070\u005f\u0048\u0031\u0058\u0036\u0062\u0055\u006e\u004f\u0046\u0033\u0071\u005a\u0047\u007a\u0036\u0047\u0053\u0074\u006e\u0043\u0057\u0045\u004c\u0049\u0074\u0072\u005a\u0054\u0034\u0063\u0030\u0041\u0036\u0051\u0067\u0076'
-};
-function fetchWithToken(url) {
-    return fetch(url, {
-        headers: {
-            Authorization: `token ${imageConfig.token}`,
-            'Accept': 'application/vnd.github.v3+json'
-        }
-    });
-}
-function loadImageGallery(containerId) {
-    const container = document.getElementById(containerId);
-    if (!container) {
-        console.error('图片容器元素不存在');
-        return;
-    }
-    
-    container.innerHTML = '<p class="loading">正在加载图片...</p>';
-    
-    fetchWithToken(`${imageConfig.baseUrl}${imageConfig.imagePath}`)
-        .then(response => {
-            if (!response.ok) throw new Error(`API请求失败: ${response.status}`);
-            return response.json();
-        })
-        .then(data => {
-            container.innerHTML = '';
-            const imageFiles = data.filter(item => 
-                item.type === 'file' && /\.(jpg|jpeg|png|gif|svg)$/i.test(item.name)
-            );
-            
-            if (imageFiles.length === 0) {
-                container.innerHTML = '<p class="empty">没有找到图片</p>';
-                return;
-            }
-            
-            imageFiles.reverse().forEach(item => {
-                const imgContainer = document.createElement('div');
-                imgContainer.className = 'image-container';
-                
-                const img = document.createElement('img');
-                img.src = 'https://gh.ptoe.cc/' + item.download_url;
-                img.alt = item.name.replace(/\.\w+$/, '');
-                img.loading = 'lazy';
-                img.className = 'landscape-image';
-                
-                const subtitle = document.createElement('div');
-                subtitle.className = 'subtitle';
-                subtitle.textContent = item.name.replace(/\.\w+$/, '');
-                
-                imgContainer.appendChild(img);
-                imgContainer.appendChild(subtitle);
-                container.appendChild(imgContainer);
-            });
-        })
-        .catch(error => {
-            console.error('图片加载错误:', error);
-            container.innerHTML = '<p class="error">无法加载图片，请检查网络连接或令牌有效性</p>';
-        });
-}
-document.addEventListener('DOMContentLoaded', () => {
-    loadImageGallery('message');
-});
-</script>
-<script>
-//轮播
-const carouselConfig = {
-    baseUrl: 'https://api.github.com/repos/rjdsq/ksx/contents/',
-    carouselPath: 'img/lunbo/',
-    token: '\u0067\u0068\u0070\u005f\u0048\u0031\u0058\u0036\u0062\u0055\u006e\u004f\u0046\u0033\u0071\u005a\u0047\u007a\u0036\u0047\u0053\u0074\u006e\u0043\u0057\u0045\u004c\u0049\u0074\u0072\u005a\u0054\u0034\u0063\u0030\u0041\u0036\u0051\u0067\u0076'
-};
-function fetchWithToken(url) {
-    return fetch(url, {
-        headers: {
-            Authorization: `token ${carouselConfig.token}`,
-            'Accept': 'application/vnd.github.v3+json'
-        }
-    });
-}
-function initCarousel() {
-    const slidesContainer = document.querySelector('.carousel-slides');
-    const dotsContainer = document.querySelector('.carousel-dots');
-    const prevButton = document.querySelector('.carousel-button.prev');
-    const nextButton = document.querySelector('.carousel-button.next');
-    
-    if (!slidesContainer || !dotsContainer) return;
-    
-    
-    
-    fetchWithToken(`${carouselConfig.baseUrl}${carouselConfig.carouselPath}`)
-        .then(response => {
-            if (!response.ok) throw new Error(`轮播图API请求失败: ${response.status}`);
-            return response.json();
-        })
-        .then(data => {
-            slidesContainer.innerHTML = '';
-            dotsContainer.innerHTML = '';
-            
-            const carouselImages = data
-                .filter(item => item.type === 'file' && /\.(jpg|jpeg|png|gif)$/i.test(item.name))
-                .reverse()
-                .slice(0, 5);
-            
-            if (carouselImages.length === 0) {
-                slidesContainer.innerHTML = '<p class="empty">没有找到轮播图图片</p>';
-                return;
-            }
-            
-            carouselImages.forEach((imgItem, index) => {
-                const slide = document.createElement('div');
-                slide.className = 'carousel-slide';
-                
-                const img = document.createElement('img');
-                img.src = 'https://gh.ptoe.cc/' + imgItem.download_url;
-                img.alt = imgItem.name.replace(/\.\w+$/, '');
-                img.className = 'carousel-slide-img';
-                img.loading = 'lazy';
-                
-                const caption = document.createElement('div');
-                caption.className = 'carousel-caption';
-                caption.textContent = imgItem.name.replace(/\.\w+$/, '');
-                
-                slide.appendChild(img);
-                slide.appendChild(caption);
-                slidesContainer.appendChild(slide);
-                
-                const dot = document.createElement('div');
-                dot.className = `carousel-dot${index === 0 ? ' active' : ''}`;
-                dot.addEventListener('click', () => goToSlide(index));
-                dotsContainer.appendChild(dot);
-            });
-            
-            currentSlide = 0;
-            updateCarousel();
-            startSlideShow();
-            
-            if (prevButton) prevButton.addEventListener('click', prevSlide);
-            if (nextButton) nextButton.addEventListener('click', nextSlide);
-        })
-        .catch(error => {
-            console.error('轮播图加载错误:', error);
-            slidesContainer.innerHTML = '<p class="error">无法加载轮播图，请检查网络连接</p>';
-        });
-}
-let currentSlide = 0;
-let slideInterval;
-const slideDelay = 5000;
-function updateCarousel() {
-    const slides = document.querySelector('.carousel-slides');
-    if (!slides) return;
-    
-    slides.style.transform = `translateX(-${currentSlide * 100}%)`;
-    
-    document.querySelectorAll('.carousel-dot').forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentSlide);
-    });
-}
-function goToSlide(index) {
-    currentSlide = index;
-    updateCarousel();
-    resetSlideShow();
-}
-function nextSlide() {
-    currentSlide = (currentSlide + 1) % document.querySelectorAll('.carousel-slide').length;
-    updateCarousel();
-    resetSlideShow();
-}
-function prevSlide() {
-    currentSlide = (currentSlide - 1 + document.querySelectorAll('.carousel-slide').length) % document.querySelectorAll('.carousel-slide').length;
-    updateCarousel();
-    resetSlideShow();
-}
-function startSlideShow() {
-    if (slideInterval) clearInterval(slideInterval);
-    slideInterval = setInterval(nextSlide, slideDelay);
-}
-function stopSlideShow() {
-    if (slideInterval) clearInterval(slideInterval);
-}
-function resetSlideShow() {
-    stopSlideShow();
-    startSlideShow();
-}
-document.addEventListener('DOMContentLoaded', () => {
-    initCarousel();
-    
-    const carouselContainer = document.querySelector('.carousel-container');
-    if (carouselContainer) {
-        carouselContainer.addEventListener('mouseenter', stopSlideShow);
-        carouselContainer.addEventListener('mouseleave', startSlideShow);
-    }
-});
-</script>
-<script>
-const textFileUrls = {
-    'text1': 'https://gh.ptoe.cc/https://raw.githubusercontent.com/rjdsq/ksx/main/text/选项卡1.txt',
-    'text2': 'https://gh.ptoe.cc/https://raw.githubusercontent.com/rjdsq/ksx/main/text/选项卡2.txt',
-    'text3': 'https://gh.ptoe.cc/https://raw.githubusercontent.com/rjdsq/ksx/main/text/选项卡3.txt'
-};
-
-function loadText(elementId, fileKey) {
-    const element = document.getElementById(elementId);
-    if (!element) return;
-
-    element.innerHTML = '<p class="loading">正在加载内容...</p>';
-    const url = textFileUrls[fileKey];
-    if (!url) {
-        element.innerHTML = `<p class="error">文件路径不存在</p>`;
-        return;
-    }
-
-    fetch(url)
-        .then(response => response.ok ? response.text() : Promise.reject(new Error(`请求失败: ${response.status}`)))
-        .then(text => {
-            // 处理换行逻辑：
-            // 1. 先将2次换行(\n\n)转换为段落分隔符</p><p>
-            // 2. 将单次换行(\n)转换为<br>
-            // 3. 超过2次的换行(\n{3,})保持原样
-            // 4. 首尾添加段落标签
-            const htmlContent = text
-                .replace(/\n{3,}/g, '\n\n')  // 超过2次的换行保持为2次
-                .replace(/\n\n/g, '</p><p>')  // 2次换行转段落分隔
-                .replace(/\n/g, '<br>')       // 单次换行转<br>
-                .replace(/(^\s*|<br>\s*)|(\s*$|\s*<br>)/g, '')  // 移除首尾空白和<br>
-                .replace(/^/, '<p>')           // 开头添加<p>
-                .replace(/$/, '</p>');         // 结尾添加</p>
-            
-            element.innerHTML = htmlContent;
-        })
-        .catch(error => {
-            element.innerHTML = `<p class="error">加载失败: ${error.message}</p>`;
-            console.error('文本加载错误:', error);
-        });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    loadText('text1', 'text1');
-    loadText('text2', 'text2');
-    loadText('text3', 'text3');
-});
-</script>
-
 
 </body>
 </html>
