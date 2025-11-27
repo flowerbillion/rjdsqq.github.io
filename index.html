@@ -5,10 +5,9 @@
 <meta name="viewport" content="user-scalable=no">
 <link rel="shortcut icon" href="https://gh.llkk.cc/https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main/img/favicon.ico" type="image/x-icon">
 <title>阚霜雪 - 温故流年</title>
-<meta name="description" content="阚霜雪/樱花特效的伤感怀旧音乐播放相册回忆录网页，记录分手时光与思念，可播放'关于她的故事'主题曲目，承载深情回忆与青春情愫。">
- <meta name="keywords" content="阚霜雪,回忆录,相册回忆录,伤感音乐播放器,怀旧音乐网页,分手纪念网页,下雨特效网页,樱花特效网页,关于她的故事音乐,沉浸式分手相册网页">
+<meta name="description" content="阚霜雪/樱花特效的伤感怀旧音乐播放相册回忆录网页。">
 <style> 
-body{margin:0;width:100vw;background:#111;color:#fff;font-family:sans-serif;padding-bottom:110px}
+body{margin:0;width:100vw;background:#050505;color:#fff;font-family:sans-serif;padding-bottom:110px}
 #c{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:12px}
 #c.g4{grid-template-columns:repeat(4,1fr)}
 @media (min-width: 1024px) {
@@ -21,8 +20,8 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;cursor:pointe
 #v{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;z-index:2000}
 #v img{width:100%;max-height:90vh;object-fit:contain;opacity:1;animation:f .3s cubic-bezier(.4,0,.2,1)}
 @keyframes f{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
-.nav {position:fixed;bottom:0;left:0;width:100%;height:100px;background:#0000003a;display:flex;align-items:center;justify-content:space-evenly;z-index:1000;backdrop-filter:blur(10px)}
-.btn {background:0;border:0;color:#fff;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;user-select:none;font-size:40px;padding:10px;transition:.2s}
+.nav {position:fixed;bottom:0;left:0;width:100%;height:100px;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:space-evenly;z-index:1000;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);overflow:hidden;border-top:1px solid rgba(255,255,255,0.08)}
+.btn {background:0;border:0;color:#fff;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent;user-select:none;font-size:40px;padding:10px;transition:.2s;position:relative;z-index:10;text-shadow:0 0 15px rgba(255,255,255,0.4)}
 .btn:active{transform:scale(.9)}
 .btn-l {font-size:50px}
 #ml {position:fixed;bottom:160px;left:55px;width:360px;max-height:60vh;background:#000000e6;border-radius:16px;overflow-y:auto;display:none;flex-direction:column;z-index:666;backdrop-filter:blur(10px);box-shadow:0 8px 32px #000}
@@ -30,6 +29,7 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;cursor:pointe
 .mi:last-child {border:0}
 .mi:hover {background:#ffffff20}
 .mi.act {color:#4f9;font-weight:bold;background:#ffffff10}
+#cvs {position:absolute;bottom:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0.9;mix-blend-mode:screen;filter:blur(6px) contrast(1.1);transform:translateZ(0)}
 </style> 
 </head>
 <body> 
@@ -39,13 +39,14 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;cursor:pointe
 <div id="ml"></div>
 
 <div class="nav">
+    <canvas id="cvs"></canvas>
     <button id="list" class="btn">♫</button>
     <button id="b" class="btn btn-l">⏮</button>
     <button id="p" class="btn">▶</button>
     <button id="n" class="btn btn-l">⏭</button>
     <button id="l" class="btn">※</button>
 </div>
-<audio id="a" hidden preload="auto"></audio>
+<audio id="a" hidden preload="auto" crossorigin="anonymous"></audio>
 
 <script>
 !function(){
@@ -57,7 +58,100 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;cursor:pointe
           lb=document.getElementById('l'),
           ct=document.getElementById('c'),
           ls=document.getElementById('list'),
-          ml=document.getElementById('ml');
+          ml=document.getElementById('ml'),
+          cvs=document.getElementById('cvs');
+
+    let ac, an, src, ctx, gr;
+    let inited = false;
+
+    function initAudio() {
+        if(inited) return;
+        try {
+            const AC = window.AudioContext || window.webkitAudioContext;
+            if(!AC) return;
+            ac = new AC();
+            an = ac.createAnalyser();
+            an.fftSize = 512; 
+            an.smoothingTimeConstant = 0.9;
+            
+            src = ac.createMediaElementSource(u);
+            src.connect(an);
+            an.connect(ac.destination);
+            
+            ctx = cvs.getContext('2d', { alpha: true });
+            resize();
+            window.addEventListener('resize', resize);
+            inited = true;
+            render();
+        } catch(e) { console.log(e); }
+    }
+
+    function resize() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        cvs.width = cvs.clientWidth * dpr;
+        cvs.height = cvs.clientHeight * dpr;
+        if(ctx) {
+            ctx.scale(dpr, dpr);
+            gr = ctx.createLinearGradient(0, cvs.clientHeight, 0, 0);
+            gr.addColorStop(0, 'rgba(255, 255, 255, 0.99)'); 
+            gr.addColorStop(0.3, 'rgba(180, 220, 255, 0.7)'); 
+            gr.addColorStop(0.7, 'rgba(255, 192, 220, 0.4)'); 
+            gr.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        }
+    }
+
+    function render() {
+        if(!inited) return;
+        requestAnimationFrame(render);
+        
+        const w = cvs.clientWidth;
+        const h = cvs.clientHeight;
+        const cx = w / 2;
+        
+        ctx.clearRect(0, 0, w, h);
+        if(u.paused) return;
+
+        const len = an.frequencyBinCount;
+        const da = new Uint8Array(len);
+        an.getByteFrequencyData(da);
+
+        const useLen = Math.floor(len * 0.55); 
+        const step = cx / (useLen - 2);
+        
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.fillStyle = gr;
+        
+        const drawHalf = () => {
+            ctx.beginPath();
+            ctx.moveTo(0, h);
+            
+            let y0 = h - (da[0] / 255 * h * 0.85);
+            ctx.lineTo(0, y0);
+
+            let x = 0;
+            for(let i=1; i<useLen; i++) {
+                const v = da[i] / 255;
+                const y = h - (v * h * 0.85);
+                ctx.quadraticCurveTo(x + step/2, (y0+y)/2, x + step, y);
+                x += step;
+                y0 = y;
+            }
+            ctx.lineTo(x, h);
+            ctx.closePath();
+            ctx.fill();
+        };
+
+        ctx.save();
+        ctx.translate(cx, 0);
+        
+        drawHalf();
+        
+        ctx.scale(-1, 1);
+        drawHalf();
+        
+        ctx.restore();
+        ctx.globalCompositeOperation = 'source-over';
+    }
 
     lb.onclick=()=>{ct.classList.toggle('g4')};
     
@@ -81,9 +175,7 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;cursor:pointe
         });
         if(t[c] && 'mediaSession' in navigator){
             navigator.mediaSession.metadata = new MediaMetadata({
-                title: t[c].n,
-                artist: '关于她的故事',
-                album: 'Music Collection'
+                title: t[c].n, artist: '关于她的故事', album: 'Music Collection'
             });
         }
     };
@@ -91,51 +183,33 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;cursor:pointe
     u.onplay = () => {
         q.textContent = '❚❚';
         ia = !0;
+        if(!inited) initAudio();
+        if(ac && ac.state === 'suspended') ac.resume();
         upd();
     };
 
-    u.onpause = () => {
-        q.textContent = '▶';
-    };
+    u.onpause = () => { q.textContent = '▶'; };
 
     const pp=()=>{
         if(!t.length)return;
-        if(u.paused){
-            mp = !1;
-            u.play();
-        }else{
-            mp = !0;
-            u.pause();
-        }
+        if(!inited) initAudio();
+        if(u.paused){ mp=!1; u.play(); } else { mp=!0; u.pause(); }
     };
     
     const ld=(i)=>{
         if(!t.length) return;
         c=(i+t.length)%t.length;
-        u.src=t[c].u;
-        u.load();
-        mp = !1;
-        u.play();
+        u.src=t[c].u; u.load(); mp=!1; u.play();
     };
 
-    u.onended = () => {
-        ld(c + 1);
-    };
-
-    u.onerror = () => {
-        if(ia && t.length > 1) ld(c + 1);
-    };
-
-    if('mediaSession' in navigator){
-        navigator.mediaSession.setActionHandler('play', pp);
-        navigator.mediaSession.setActionHandler('pause', pp);
-        navigator.mediaSession.setActionHandler('previoustrack', ()=>ld(c-1));
-        navigator.mediaSession.setActionHandler('nexttrack', ()=>ld(c+1));
-    }
+    u.onended = () => { ld(c+1); };
+    u.onerror = () => { if(ia && t.length>1) ld(c+1); };
 
     fetch('https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/ksx/mp3/')
     .then(r=>r.json()).then(e=>{
-        t=e.filter(f=>f.name.endsWith('.mp3')).map(f=>({ 
+        t=e.filter(f=>f.name.endsWith('.mp3'))
+        .sort((a,b)=>parseInt(a.name)-parseInt(b.name))
+        .map(f=>({ 
             u: `https://gh.llkk.cc/${f.download_url}`,
             n: f.name.replace(/[^\u4e00-\u9fa5]/g,'') 
         }));
@@ -148,10 +222,7 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;cursor:pointe
             ml.appendChild(d);
         });
 
-        if(t.length) {
-            u.src=t[0].u;
-            upd();
-        }
+        if(t.length) { u.src=t[0].u; upd(); }
     });
 
     q.onclick=pp;
@@ -159,6 +230,8 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;cursor:pointe
     n.onclick=()=>{ld(c+1)};
     
     document.addEventListener('click',(e)=>{
+        if(!inited && t.length) initAudio();
+        if(ac && ac.state === 'suspended') ac.resume();
         if(!e.target.closest('.btn')&&!e.target.closest('#v')&&!e.target.closest('#ml')){
             if(t.length && u.paused && !mp) u.play().catch(()=>{});
         }
@@ -188,6 +261,9 @@ fetch(gu,{headers:{Authorization:'token \u0067\u0068\u0070\u005f\u0048\u0031\u00
     v.onclick=()=>v.style.display='none';
 });
 </script>
+
+
+
 <script>
 const s = new Date('2025-05-20 20:00:00');
 setTimeout(() => {
