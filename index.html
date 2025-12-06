@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh"> 
-<head> 
+<html lang="zh">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="user-scalable=no">
 <link rel="shortcut icon" href="https://gh.llkk.cc/https://raw.githubusercontent.com/rjdsq/rjdsq.github.io/main/img/favicon.ico" type="image/x-icon">
@@ -50,84 +50,147 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;cursor:pointe
 
 <script>
 !function(){
-    let t=[],c=0,ia=!1,mp=!1;
-    const b=document.getElementById('b'),
-          q=document.getElementById('p'),
-          n=document.getElementById('n'),
-          u=document.getElementById('a'),
-          lb=document.getElementById('l'),
-          ct=document.getElementById('c'),
-          ls=document.getElementById('list'),
-          ml=document.getElementById('ml'),
-          cvs=document.getElementById('cvs');
+    const DB_NAME = 'KSX_Cache';
+    const DB_VER = 1;
+    const ST_MUSIC = 'music_store';
+    const ST_IMG = 'image_store';
+    
+    const API_MUSIC = 'https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/ksx/mp3/';
+    const API_IMG = 'https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/ksx/img/';
+    const PROXY_MP3 = 'https://gh.llkk.cc/';
+    const PROXY_IMG = 'https://gh.927223.xyz/';
+    const AUTH = '\u0067\u0068\u0070\u005f\u0048\u0031\u0058\u0036\u0062\u0055\u006e\u004f\u0046\u0033\u0071\u005a\u0047\u007a\u0036\u0047\u0053\u0074\u006e\u0043\u0057\u0045\u004c\u0049\u0074\u0072\u005a\u0054\u0034\u0063\u0030\u0041\u0036\u0051\u0067\u0076';
+
+    let dbInstance = null;
+    let musicList = [];
+    let currentIdx = 0;
+    let isAudioInited = false;
+    let manualPause = false;
+
+    const els = {
+        b: document.getElementById('b'),
+        p: document.getElementById('p'),
+        n: document.getElementById('n'),
+        a: document.getElementById('a'),
+        l: document.getElementById('l'),
+        c: document.getElementById('c'),
+        ls: document.getElementById('list'),
+        ml: document.getElementById('ml'),
+        cvs: document.getElementById('cvs'),
+        v: document.getElementById('v'),
+        vImg: document.querySelector('#v img')
+    };
 
     let ac, an, src, ctx, gr;
-    let inited = false;
 
-    function initAudio() {
-        if(inited) return;
+    async function openDB() {
+        return new Promise((resolve, reject) => {
+            const req = indexedDB.open(DB_NAME, DB_VER);
+            req.onupgradeneeded = e => {
+                const db = e.target.result;
+                if(!db.objectStoreNames.contains(ST_MUSIC)) db.createObjectStore(ST_MUSIC, {keyPath: 'name'});
+                if(!db.objectStoreNames.contains(ST_IMG)) db.createObjectStore(ST_IMG, {keyPath: 'name'});
+            };
+            req.onsuccess = e => {
+                dbInstance = e.target.result;
+                resolve(dbInstance);
+            };
+            req.onerror = e => reject(e);
+        });
+    }
+
+    async function getStoreData(storeName) {
+        return new Promise((resolve) => {
+            if(!dbInstance) resolve([]);
+            const tx = dbInstance.transaction(storeName, 'readonly');
+            const st = tx.objectStore(storeName);
+            const req = st.getAll();
+            req.onsuccess = () => resolve(req.result);
+            req.onerror = () => resolve([]);
+        });
+    }
+
+    async function saveToDB(storeName, item) {
+        return new Promise((resolve) => {
+            const tx = dbInstance.transaction(storeName, 'readwrite');
+            const st = tx.objectStore(storeName);
+            st.put(item);
+            tx.oncomplete = () => resolve();
+            tx.onerror = () => resolve();
+        });
+    }
+
+    async function deleteFromDB(storeName, key) {
+        return new Promise((resolve) => {
+            const tx = dbInstance.transaction(storeName, 'readwrite');
+            tx.objectStore(storeName).delete(key);
+            tx.oncomplete = () => resolve();
+        });
+    }
+
+    async function fetchBlob(url) {
+        const r = await fetch(url);
+        if(!r.ok) throw new Error(r.statusText);
+        return await r.blob();
+    }
+
+    function initAudioGraph() {
+        if(isAudioInited) return;
         try {
             const AC = window.AudioContext || window.webkitAudioContext;
             if(!AC) return;
             ac = new AC();
             an = ac.createAnalyser();
-            an.fftSize = 512; 
+            an.fftSize = 512;
             an.smoothingTimeConstant = 0.9;
-            
-            src = ac.createMediaElementSource(u);
+            src = ac.createMediaElementSource(els.a);
             src.connect(an);
             an.connect(ac.destination);
-            
-            ctx = cvs.getContext('2d', { alpha: true });
-            resize();
-            window.addEventListener('resize', resize);
-            inited = true;
-            render();
-        } catch(e) { console.log(e); }
+            ctx = els.cvs.getContext('2d', { alpha: true });
+            resizeCvs();
+            window.addEventListener('resize', resizeCvs);
+            isAudioInited = true;
+            renderVisual();
+        } catch(e) {}
     }
 
-    function resize() {
+    function resizeCvs() {
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        cvs.width = cvs.clientWidth * dpr;
-        cvs.height = cvs.clientHeight * dpr;
+        els.cvs.width = els.cvs.clientWidth * dpr;
+        els.cvs.height = els.cvs.clientHeight * dpr;
         if(ctx) {
             ctx.scale(dpr, dpr);
-            gr = ctx.createLinearGradient(0, cvs.clientHeight, 0, 0);
-            gr.addColorStop(0, 'rgba(255, 255, 255, 0.99)'); 
-            gr.addColorStop(0.3, 'rgba(180, 220, 255, 0.7)'); 
-            gr.addColorStop(0.7, 'rgba(255, 192, 220, 0.4)'); 
+            gr = ctx.createLinearGradient(0, els.cvs.clientHeight, 0, 0);
+            gr.addColorStop(0, 'rgba(255, 255, 255, 0.99)');
+            gr.addColorStop(0.3, 'rgba(180, 220, 255, 0.7)');
+            gr.addColorStop(0.7, 'rgba(255, 192, 220, 0.4)');
             gr.addColorStop(1, 'rgba(255, 255, 255, 0)');
         }
     }
 
-    function render() {
-        if(!inited) return;
-        requestAnimationFrame(render);
-        
-        const w = cvs.clientWidth;
-        const h = cvs.clientHeight;
+    function renderVisual() {
+        if(!isAudioInited) return;
+        requestAnimationFrame(renderVisual);
+        const w = els.cvs.clientWidth;
+        const h = els.cvs.clientHeight;
         const cx = w / 2;
-        
         ctx.clearRect(0, 0, w, h);
-        if(u.paused) return;
+        if(els.a.paused) return;
 
         const len = an.frequencyBinCount;
         const da = new Uint8Array(len);
         an.getByteFrequencyData(da);
-
-        const useLen = Math.floor(len * 0.55); 
+        const useLen = Math.floor(len * 0.55);
         const step = cx / (useLen - 2);
-        
+
         ctx.globalCompositeOperation = 'lighter';
         ctx.fillStyle = gr;
-        
+
         const drawHalf = () => {
             ctx.beginPath();
             ctx.moveTo(0, h);
-            
             let y0 = h - (da[0] / 255 * h * 0.85);
             ctx.lineTo(0, y0);
-
             let x = 0;
             for(let i=1; i<useLen; i++) {
                 const v = da[i] / 255;
@@ -143,125 +206,219 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;cursor:pointe
 
         ctx.save();
         ctx.translate(cx, 0);
-        
         drawHalf();
-        
         ctx.scale(-1, 1);
         drawHalf();
-        
         ctx.restore();
         ctx.globalCompositeOperation = 'source-over';
     }
 
-    lb.onclick=()=>{ct.classList.toggle('g4')};
-    
-    ls.onclick=()=>{
-        if(ml.style.display==='flex'){
-            ml.style.display='none';
-        } else {
-            ml.style.display='flex';
-            const act = ml.querySelector('.act');
-            if(act) act.scrollIntoView({block:"center",behavior:"smooth"});
-        }
-    };
-
-    window.addEventListener('scroll', ()=>{
-        if(ml.style.display==='flex') ml.style.display='none';
-    });
-
-    const upd=()=>{
-        Array.from(ml.children).forEach((el,i)=>{
-            el.className = i===c ? 'mi act' : 'mi';
+    function updatePlaylistUI() {
+        els.ml.innerHTML = '';
+        musicList.forEach((s, i) => {
+            let d = document.createElement('div');
+            d.className = i === currentIdx ? 'mi act' : 'mi';
+            d.textContent = s.n || '未知曲目';
+            d.onclick = () => { playMusic(i); els.ml.style.display='none'; };
+            els.ml.appendChild(d);
         });
-        if(t[c] && 'mediaSession' in navigator){
+        if(musicList[currentIdx] && 'mediaSession' in navigator){
             navigator.mediaSession.metadata = new MediaMetadata({
-                title: t[c].n, artist: '关于她的故事', album: 'Music Collection'
+                title: musicList[currentIdx].n, artist: '关于她的故事', album: 'Music Collection'
             });
         }
-    };
+    }
 
-    u.onplay = () => {
-        q.textContent = '❚❚';
-        ia = !0;
-        if(!inited) initAudio();
-        if(ac && ac.state === 'suspended') ac.resume();
-        upd();
-    };
+    function playMusic(i) {
+        if(!musicList.length) return;
+        currentIdx = (i + musicList.length) % musicList.length;
+        const item = musicList[currentIdx];
+        const blobUrl = URL.createObjectURL(item.blob);
+        els.a.src = blobUrl;
+        els.a.load();
+        manualPause = false;
+        els.a.play();
+        updatePlaylistUI();
+    }
 
-    u.onpause = () => { q.textContent = '▶'; };
+    function togglePlay() {
+        if(!musicList.length) return;
+        if(!isAudioInited) initAudioGraph();
+        if(els.a.paused) { manualPause = false; els.a.play(); } 
+        else { manualPause = true; els.a.pause(); }
+    }
 
-    const pp=()=>{
-        if(!t.length)return;
-        if(!inited) initAudio();
-        if(u.paused){ mp=!1; u.play(); } else { mp=!0; u.pause(); }
-    };
-    
-    const ld=(i)=>{
-        if(!t.length) return;
-        c=(i+t.length)%t.length;
-        u.src=t[c].u; u.load(); mp=!1; u.play();
-    };
+    function renderImages(list) {
+        if(!list || !list.length) return;
 
-    u.onended = () => { ld(c+1); };
-    u.onerror = () => { if(ia && t.length>1) ld(c+1); };
-
-    fetch('https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/ksx/mp3/')
-    .then(r=>r.json()).then(e=>{
-        t=e.filter(f=>f.name.endsWith('.mp3'))
-        .sort((a,b)=>parseInt(a.name)-parseInt(b.name))
-        .map(f=>({ 
-            u: `https://gh.llkk.cc/${f.download_url}`,
-            n: f.name.replace(/[^\u4e00-\u9fa5]/g,'') 
-        }));
-        
-        t.forEach((s,i)=>{
-            let d=document.createElement('div');
-            d.className='mi';
-            d.textContent=s.n || '未知曲目';
-            d.onclick=()=>{ld(i);ml.style.display='none'};
-            ml.appendChild(d);
-        });
-
-        if(t.length) { u.src=t[0].u; upd(); }
-    });
-  
-    q.onclick=pp;
-    b.onclick=()=>{ld(c-1)};
-    n.onclick=()=>{ld(c+1)};
-    
-    document.addEventListener('click',(e)=>{
-        if(!inited && t.length) initAudio();
-        if(ac && ac.state === 'suspended') ac.resume();
-        if(!e.target.closest('.btn')&&!e.target.closest('#v')&&!e.target.closest('#ml')){
-            if(t.length && u.paused && !mp) u.play().catch(()=>{});
-        }
-        if(!e.target.closest('#list') && !e.target.closest('#ml')) ml.style.display='none';
-    });
-}();
-
-const gu='https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/ksx/img/';
-fetch(gu,{headers:{Authorization:'token \u0067\u0068\u0070\u005f\u0048\u0031\u0058\u0036\u0062\u0055\u006e\u004f\u0046\u0033\u0071\u005a\u0047\u007a\u0036\u0047\u0053\u0074\u006e\u0043\u0057\u0045\u004c\u0049\u0074\u0072\u005a\u0054\u0034\u0063\u0030\u0041\u0036\u0051\u0067\u0076'}})
-.then(r=>r.json()).then(d=>{
-    const c=document.getElementById('c');
-    const v=document.getElementById('v');
-    d.reverse().forEach((f)=>{
-        if(/\.(webp|jpg|jpeg|png|gif)$/i.test(f.name)){
-            const img=document.createElement('img');
-            img.decoding='async';
-            img.onload=()=>img.className='s';
-            img.src=`https://gh.927223.xyz/${f.download_url}`;
-            img.onclick=()=>{
-                const i2 = v.querySelector('img');
-                if(i2.src !== img.src) i2.src = img.src;
-                v.style.display='flex';
+        const createImg = (item) => {
+            const img = document.createElement('img');
+            img.dataset.name = item.name;
+            img.decoding = 'async';
+            img.onload = () => img.className = 's';
+            img.src = URL.createObjectURL(item.blob);
+            img.onclick = () => {
+                els.vImg.src = img.src;
+                els.v.style.display = 'flex';
             };
-            c.appendChild(img);
-        }
-    });
-    v.onclick=()=>v.style.display='none';
-});
-</script>
+            return img;
+        };
 
+        if(els.c.children.length === 0) {
+            list.sort((a,b) => b.name.localeCompare(a.name));
+            const fragment = document.createDocumentFragment();
+            list.forEach(item => {
+                if(!/\.(webp|jpg|jpeg|png|gif)$/i.test(item.name)) return;
+                fragment.appendChild(createImg(item));
+            });
+            els.c.appendChild(fragment);
+        } else {
+            list.forEach(item => {
+                if(document.querySelector(`img[data-name="${item.name}"]`)) return;
+                if(!/\.(webp|jpg|jpeg|png|gif)$/i.test(item.name)) return;
+                
+                const img = createImg(item);
+                let inserted = false;
+                const children = Array.from(els.c.children);
+                for(let child of children) {
+                    if(item.name > child.dataset.name) {
+                        els.c.insertBefore(img, child);
+                        inserted = true;
+                        break;
+                    }
+                }
+                if(!inserted) els.c.appendChild(img);
+            });
+        }
+    }
+
+    async function syncData(type) {
+        const isMusic = type === 'music';
+        const storeName = isMusic ? ST_MUSIC : ST_IMG;
+        const apiUrl = isMusic ? API_MUSIC : API_IMG;
+        const proxyBase = isMusic ? PROXY_MP3 : PROXY_IMG;
+
+        try {
+            const remoteList = await fetch(apiUrl, {
+                headers: { Authorization: 'token ' + AUTH }
+            }).then(r => r.json());
+            
+            if(!Array.isArray(remoteList)) return;
+
+            const localData = await getStoreData(storeName);
+            const localMap = new Map(localData.map(i => [i.name, i]));
+            const remoteMap = new Map();
+
+            for(const item of remoteList) {
+                if(!isMusic && !/\.(webp|jpg|jpeg|png|gif)$/i.test(item.name)) continue;
+                if(isMusic && !item.name.endsWith('.mp3')) continue;
+
+                remoteMap.set(item.name, item);
+                const localItem = localMap.get(item.name);
+
+                if(!localItem || localItem.sha !== item.sha) {
+                    try {
+                        const blob = await fetchBlob(`${proxyBase}${item.download_url}`);
+                        const newItem = {
+                            name: item.name,
+                            sha: item.sha,
+                            blob: blob,
+                            n: isMusic ? item.name.replace(/[^\u4e00-\u9fa5]/g,'') : null
+                        };
+                        await saveToDB(storeName, newItem);
+                        if(isMusic) {
+                            const existIdx = musicList.findIndex(x => x.name === item.name);
+                            if(existIdx > -1) musicList[existIdx] = newItem;
+                            else musicList.push(newItem);
+                            musicList.sort((a,b) => parseInt(a.name) - parseInt(b.name));
+                            updatePlaylistUI();
+                            if(musicList.length === 1 && els.a.paused && !manualPause) {
+                                els.a.src = URL.createObjectURL(newItem.blob);
+                                updatePlaylistUI();
+                            }
+                        } else {
+                            renderImages([newItem]);
+                        }
+                    } catch(e) {}
+                }
+            }
+
+            for(const [key, val] of localMap) {
+                if(!remoteMap.has(key)) {
+                    await deleteFromDB(storeName, key);
+                    if(isMusic) {
+                        musicList = musicList.filter(x => x.name !== key);
+                        updatePlaylistUI();
+                    } else {
+                        const rImg = document.querySelector(`img[data-name="${key}"]`);
+                        if(rImg) rImg.remove();
+                    }
+                }
+            }
+        } catch(e) {}
+    }
+
+    async function init() {
+        await openDB();
+
+        const cachedMusic = await getStoreData(ST_MUSIC);
+        if(cachedMusic.length) {
+            musicList = cachedMusic.sort((a,b) => parseInt(a.name) - parseInt(b.name));
+            updatePlaylistUI();
+            if(musicList.length) els.a.src = URL.createObjectURL(musicList[0].blob);
+        }
+
+        const cachedImages = await getStoreData(ST_IMG);
+        if(cachedImages.length) {
+            renderImages(cachedImages);
+        }
+
+        syncData('music');
+        syncData('img');
+    }
+
+    els.a.onplay = () => {
+        els.p.textContent = '❚❚';
+        if(!isAudioInited) initAudioGraph();
+        if(ac && ac.state === 'suspended') ac.resume();
+        updatePlaylistUI();
+    };
+    els.a.onpause = () => { els.p.textContent = '▶'; };
+    els.a.onended = () => { playMusic(currentIdx + 1); };
+    els.a.onerror = () => { if(musicList.length > 1) playMusic(currentIdx + 1); };
+
+    els.p.onclick = togglePlay;
+    els.b.onclick = () => playMusic(currentIdx - 1);
+    els.n.onclick = () => playMusic(currentIdx + 1);
+    
+    els.l.onclick = () => els.c.classList.toggle('g4');
+    els.ls.onclick = () => {
+        if(els.ml.style.display === 'flex') {
+            els.ml.style.display = 'none';
+        } else {
+            els.ml.style.display = 'flex';
+            const act = els.ml.querySelector('.act');
+            if(act) act.scrollIntoView({block:"center", behavior:"smooth"});
+        }
+    };
+    els.v.onclick = () => els.v.style.display = 'none';
+
+    window.addEventListener('scroll', () => {
+        if(els.ml.style.display === 'flex') els.ml.style.display = 'none';
+    });
+
+    document.addEventListener('click', (e) => {
+        if(!isAudioInited && musicList.length) initAudioGraph();
+        if(ac && ac.state === 'suspended') ac.resume();
+        if(!e.target.closest('.btn') && !e.target.closest('#v') && !e.target.closest('#ml')) {
+            if(musicList.length && els.a.paused && !manualPause) els.a.play().catch(()=>{});
+        }
+        if(!e.target.closest('#list') && !e.target.closest('#ml')) els.ml.style.display='none';
+    });
+
+    init();
+}();
+</script>
 
 
 <script>
@@ -358,7 +515,7 @@ function createRaindrop(container) {
     // 添加到容器
     container.appendChild(raindrop);
 }
- 
+
 // 定义雨滴下落动画
 const style = document.createElement('style');
 style.textContent = `
