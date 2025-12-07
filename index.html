@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -255,6 +257,7 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;cursor:pointe
             const img = document.createElement('img');
             img.dataset.name = item.name;
             img.decoding = 'async';
+            img.loading = 'lazy'; // 优化：懒加载
             img.onload = () => img.className = 's';
             img.src = URL.createObjectURL(item.blob);
             img.onclick = () => {
@@ -309,6 +312,9 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;cursor:pointe
             const localMap = new Map(localData.map(i => [i.name, i]));
             const remoteMap = new Map();
 
+            // 优化：收集需要下载的任务，而不是串行等待
+            const downloadTasks = [];
+
             for(const item of remoteList) {
                 if(!isMusic && !/\.(webp|jpg|jpeg|png|gif)$/i.test(item.name)) continue;
                 if(isMusic && !item.name.endsWith('.mp3')) continue;
@@ -317,35 +323,53 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;cursor:pointe
                 const localItem = localMap.get(item.name);
 
                 if(!localItem || localItem.sha !== item.sha) {
-                    try {
-                        const blob = await fetchBlob(`${proxyBase}${item.download_url}`);
-                        const newItem = {
-                            name: item.name,
-                            sha: item.sha,
-                            blob: blob,
-                            n: isMusic ? item.name.replace(/[^\u4e00-\u9fa5]/g,'') : null
-                        };
-                        await saveToDB(storeName, newItem);
-                        if(isMusic) {
-                            const existIdx = musicList.findIndex(x => x.name === item.name);
-                            if(existIdx > -1) musicList[existIdx] = newItem;
-                            else musicList.push(newItem);
-                            musicList.sort((a,b) => parseInt(a.name) - parseInt(b.name));
-                            updatePlaylistUI();
-                            if(musicList.length === 1 && els.a.paused && !manualPause) {
-                                els.a.src = URL.createObjectURL(newItem.blob);
+                    // 添加任务到队列
+                    downloadTasks.push(async () => {
+                        try {
+                            const blob = await fetchBlob(`${proxyBase}${item.download_url}`);
+                            const newItem = {
+                                name: item.name,
+                                sha: item.sha,
+                                blob: blob,
+                                n: isMusic ? item.name.replace(/[^\u4e00-\u9fa5]/g,'') : null
+                            };
+                            // 异步写入DB，不等待
+                            saveToDB(storeName, newItem).catch(()=>{});
+                            
+                            if(isMusic) {
+                                const existIdx = musicList.findIndex(x => x.name === item.name);
+                                if(existIdx > -1) musicList[existIdx] = newItem;
+                                else musicList.push(newItem);
+                                musicList.sort((a,b) => parseInt(a.name) - parseInt(b.name));
                                 updatePlaylistUI();
+                                if(musicList.length === 1 && els.a.paused && !manualPause) {
+                                    els.a.src = URL.createObjectURL(newItem.blob);
+                                    updatePlaylistUI();
+                                }
+                            } else {
+                                renderImages([newItem]);
                             }
-                        } else {
-                            renderImages([newItem]);
-                        }
-                    } catch(e) {}
+                        } catch(e) {}
+                    });
                 }
             }
 
+            // 优化：并发下载控制 (默认同时下载6个)
+            const CONCURRENCY = 6;
+            let i = 0;
+            const run = async () => {
+                while(i < downloadTasks.length) {
+                    const task = downloadTasks[i++];
+                    await task();
+                }
+            };
+            // 启动并发池
+            await Promise.all(Array(CONCURRENCY).fill(0).map(run));
+
+            // 清理本地多余数据
             for(const [key, val] of localMap) {
                 if(!remoteMap.has(key)) {
-                    await deleteFromDB(storeName, key);
+                    deleteFromDB(storeName, key); // 异步删除
                     if(isMusic) {
                         musicList = musicList.filter(x => x.name !== key);
                         updatePlaylistUI();
@@ -373,6 +397,7 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;cursor:pointe
             renderImages(cachedImages);
         }
 
+        // 并行启动同步
         syncData('music');
         syncData('img');
     }
@@ -419,6 +444,9 @@ img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;cursor:pointe
     init();
 }();
 </script>
+
+
+
 
 
 <script>
