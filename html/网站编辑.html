@@ -3,546 +3,503 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎵 Aurora 音乐播放器</title>
+    <title>日期与十六进制转换</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
         }
         
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #fff;
-            overflow-x: hidden;
+            background-color: #f5f5f5;
+            padding: 8px;
         }
         
-        .player-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            display: grid;
-            grid-template-columns: 1fr 350px;
-            gap: 30px;
-            min-height: 100vh;
-            align-items: center;
-        }
-        
-        .main-player {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border-radius: 30px;
-            padding: 40px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .album-cover {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            margin-bottom: 30px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-            animation: rotate 10s linear infinite paused;
-            background-size: cover;
-            background-position: center;
-        }
-        
-        .album-cover.playing {
-            animation-play-state: running;
-        }
-        
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        .album-cover::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            animation: shine 3s infinite;
-        }
-        
-        @keyframes shine {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-        }
-        
-        .song-info {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .song-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            background: linear-gradient(45deg, #fff, #f0f0f0);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .artist-name {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 500;
-        }
-        
-        .progress-container {
-            width: 100%;
+        .container {
             max-width: 400px;
-            margin-bottom: 25px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 4px;
+            padding: 12px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
         
-        .time-display {
-            display: flex;
-            justify-content: space-between;
+        .title {
+            text-align: center;
+            margin-bottom: 12px;
+            color: #333;
             font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 10px;
         }
         
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 3px;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .progress {
-            height: 100%;
-            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
-            border-radius: 3px;
-            width: 0%;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-        
-        .controls {
+        .mode {
             display: flex;
-            align-items: center;
-            gap: 25px;
-            margin-bottom: 25px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #e0e0e0;
         }
         
-        .control-btn {
+        .mode-btn {
+            flex: 1;
+            padding: 6px;
+            text-align: center;
             background: none;
             border: none;
             cursor: pointer;
-            color: #fff;
-            font-size: 18px;
-            transition: all 0.3s ease;
+            color: #666;
+        }
+        
+        .mode-btn.active {
+            color: #0066cc;
+            border-bottom: 2px solid #0066cc;
+        }
+        
+        .input-group {
+            margin-bottom: 8px;
+        }
+        
+        input {
+            padding: 6px 8px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            width: 100%;
+            font-size: 12px;
+        }
+        
+        .result {
+            margin-top: 12px;
             padding: 8px;
-            border-radius: 50%;
+            background-color: #f9f9f9;
+            border-radius: 3px;
+            border: 1px solid #eee;
         }
         
-        .control-btn:hover {
-            transform: scale(1.1);
-            background: rgba(255, 255, 255, 0.1);
-        }
-        
-        .play-btn {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 50%;
+        .result-item {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        }
-        
-        .volume-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .volume-slider {
-            width: 80px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 2px;
+            margin-bottom: 5px;
             cursor: pointer;
-            position: relative;
+            transition: background-color 0.2s;
+            padding: 4px 6px;
+            border-radius: 3px;
         }
         
-        .volume-level {
-            height: 100%;
-            background: #fff;
-            border-radius: 2px;
-            width: 70%;
+        .result-item:hover {
+            background-color: #f0f0f0;
         }
         
-        .playlist {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border-radius: 25px;
-            padding: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            max-height: 70vh;
-            overflow-y: auto;
+        .result-item.copied {
+            background-color: #e6f7e6;
         }
         
-        .playlist-header {
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        .result-label {
+            width: 70px;
+            color: #666;
         }
         
-        .playlist-title {
-            font-size: 20px;
-            font-weight: 600;
-        }
-        
-        .playlist-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-bottom: 6px;
-        }
-        
-        .playlist-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-        
-        .playlist-item.active {
-            background: rgba(255, 255, 255, 0.15);
-        }
-        
-        .song-number {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.5);
-            width: 25px;
-        }
-        
-        .song-details {
+        .result-value {
             flex: 1;
+            font-family: 'Consolas', monospace;
+            word-break: break-all;
+            user-select: all;
         }
         
-        .song-name {
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 2px;
+        .hidden {
+            display: none;
         }
         
-        .song-artist {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.6);
+        .current-time-btn {
+            width: 100%;
+            margin-top: 8px;
+            padding: 6px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
         }
         
-        .song-duration {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.5);
+        .current-time-btn:hover {
+            background-color: #218838;
         }
         
-        @media (max-width: 768px) {
-            .player-container {
-                grid-template-columns: 1fr;
-                gap: 20px;
-                padding: 10px;
-            }
-            
-            .main-player {
-                padding: 20px;
-            }
-            
-            .album-cover {
-                width: 150px;
-                height: 150px;
-            }
-            
-            .controls {
-                gap: 20px;
-            }
+        .auto-update {
+            font-size: 10px;
+            color: #28a745;
+            text-align: right;
+            margin-top: 2px;
         }
         
-        ::-webkit-scrollbar {
-            width: 4px;
+        .copy-tip {
+            font-size: 10px;
+            color: #888;
+            text-align: right;
+            margin-top: 2px;
         }
         
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 2px;
+        .copy-feedback {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div class="player-container">
-        <div class="main-player">
-            <div class="album-cover" id="albumCover"></div>
-            
-            <div class="song-info">
-                <div class="song-title" id="songTitle">加载中...</div>
-                <div class="artist-name" id="artistName">加载中...</div>
-            </div>
-            
-            <div class="progress-container">
-                <div class="time-display">
-                    <span id="currentTime">0:00</span>
-                    <span id="totalTime">0:00</span>
-                </div>
-                <div class="progress-bar" id="progressBar">
-                    <div class="progress" id="progress"></div>
-                </div>
-            </div>
-            
-            <div class="controls">
-                <button class="control-btn" id="prevBtn">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="19 20 9 12 19 4 19 20"></polygon>
-                        <line x1="5" y1="19" x2="5" y2="5"></line>
-                    </svg>
-                </button>
-                
-                <button class="control-btn play-btn" id="playBtn">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="playIcon">
-                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                    </svg>
-                </button>
-                
-                <button class="control-btn" id="nextBtn">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="5 4 15 12 5 20 5 4"></polygon>
-                        <line x1="19" y1="5" x2="19" y2="19"></line>
-                    </svg>
-                </button>
-                
-                <div class="volume-container">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                    </svg>
-                    <div class="volume-slider" id="volumeSlider">
-                        <div class="volume-level" id="volumeLevel"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <audio id="audioPlayer" preload="metadata"></audio>
+    <div class="copy-feedback" id="copyFeedback">已复制到剪贴板</div>
+    
+    <div class="container">
+        <div class="title">日期与十六进制转换</div>
+        
+        <div class="mode">
+            <button class="mode-btn active" data-mode="hex-to-date">十六进制转日期</button>
+            <button class="mode-btn" data-mode="date-to-hex">日期转十六进制</button>
         </div>
         
-        <div class="playlist">
-            <div class="playlist-header">
-                <h3 class="playlist-title">播放列表</h3>
+        <!-- 十六进制转日期 -->
+        <div id="hex-to-date">
+            <div class="input-group">
+                <input type="text" id="hexInput" placeholder="输入十六进制" value="">
+                <div class="auto-update"></div>
             </div>
-            <div class="playlist-content" id="playlistContent"></div>
+            
+            <div class="result">
+                <div class="result-item" id="dateResult" data-copy-target="dateOutput">
+                    <div class="result-label">日期时间:</div>
+                    <div class="result-value" id="dateOutput">-</div>
+                </div>
+            </div>
+            <div class="copy-tip"></div>
+        </div>
+        
+        <!-- 日期转十六进制 -->
+        <div id="date-to-hex" class="hidden">
+            <div class="input-group">
+                <input type="text" id="dateTimeInput" placeholder="2025.01.01 08:00:00" value="">
+                <div class="auto-update"></div>
+            </div>
+            
+            <button class="current-time-btn" id="nowBtn">使用当前时间</button>
+            
+            <div class="result">
+                <div class="result-item" id="hexResultItem" data-copy-target="hexResult">
+                    <div class="result-label">十六进制:</div>
+                    <div class="result-value" id="hexResult">-</div>
+                </div>
+            </div>
+            <div class="copy-tip"></div>
         </div>
     </div>
 
     <script>
-        const proxy = 'https://gh-proxy.com/';
-        const repoUrl = 'https://api.github.com/repos/rjdsq/rjdsq.github.io/contents/music';
-        
-        let songs = [];
-        let currentSongIndex = 0;
-        let isPlaying = false;
-        
-        const audioPlayer = document.getElementById('audioPlayer');
-        const albumCover = document.getElementById('albumCover');
-        const songTitle = document.getElementById('songTitle');
-        const artistName = document.getElementById('artistName');
-        const currentTime = document.getElementById('currentTime');
-        const totalTime = document.getElementById('totalTime');
-        const progressBar = document.getElementById('progressBar');
-        const progress = document.getElementById('progress');
-        const playBtn = document.getElementById('playBtn');
-        const playIcon = document.getElementById('playIcon');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const volumeSlider = document.getElementById('volumeSlider');
-        const volumeLevel = document.getElementById('volumeLevel');
-        const playlistContent = document.getElementById('playlistContent');
-        
-        // 获取歌曲列表
-        async function fetchSongs() {
-            try {
-                const response = await fetch(repoUrl);
-                const data = await response.json();
+        document.addEventListener('DOMContentLoaded', function() {
+            // 切换模式
+            const modeBtns = document.querySelectorAll('.mode-btn');
+            const hexToDate = document.getElementById('hex-to-date');
+            const dateToHex = document.getElementById('date-to-hex');
+            const copyFeedback = document.getElementById('copyFeedback');
+            
+            modeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    modeBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const mode = this.getAttribute('data-mode');
+                    hexToDate.classList.toggle('hidden', mode !== 'hex-to-date');
+                    dateToHex.classList.toggle('hidden', mode !== 'date-to-hex');
+                    
+                    // 切换时也触发转换
+                    if (mode === 'hex-to-date') {
+                        convertHexToDate();
+                    } else {
+                        convertDateToHex();
+                    }
+                });
+            });
+            
+            // 十六进制转日期功能
+            const hexInput = document.getElementById('hexInput');
+            const dateOutput = document.getElementById('dateOutput');
+            const dateResult = document.getElementById('dateResult');
+            
+            // 日期转十六进制功能
+            const dateTimeInput = document.getElementById('dateTimeInput');
+            const nowBtn = document.getElementById('nowBtn');
+            const hexResult = document.getElementById('hexResult');
+            const hexResultItem = document.getElementById('hexResultItem');
+            
+            // 初始化转换
+            convertHexToDate();
+            convertDateToHex();
+            
+            // 输入时自动转换
+            let hexTimer;
+            hexInput.addEventListener('input', function() {
+                clearTimeout(hexTimer);
+                hexTimer = setTimeout(convertHexToDate, 100);
+            });
+            
+            let dateTimer;
+            dateTimeInput.addEventListener('input', function() {
+                clearTimeout(dateTimer);
+                dateTimer = setTimeout(convertDateToHex, 100);
+            });
+            
+            // 复制功能
+            dateResult.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-copy-target');
+                const targetElement = document.getElementById(targetId);
+                const text = targetElement.textContent;
                 
-                songs = data
-                    .filter(item => item.type === 'file' && item.name.endsWith('.mp3'))
-                    .map(item => ({
-                        title: item.name.replace('.mp3', ''),
-                        artist: '',
-                        url: proxy + item.download_url,
-                        duration: '0:00'
-                    }));
+                if (text && text !== '-') {
+                    copyToClipboard(text, this);
+                }
+            });
+            
+            hexResultItem.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-copy-target');
+                const targetElement = document.getElementById(targetId);
+                const text = targetElement.textContent;
                 
-                renderPlaylist();
-                loadSong(0);
-            } catch (error) {
-                console.error('加载歌曲失败:', error);
+                if (text && text !== '-') {
+                    copyToClipboard(text, this);
+                }
+            });
+            
+            // 当前时间按钮
+            nowBtn.addEventListener('click', function() {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                
+                dateTimeInput.value = `${year}.${month}.${day} ${hours}:${minutes}:${seconds}`;
+                convertDateToHex();
+            });
+            
+            // 复制到剪贴板函数
+            function copyToClipboard(text, element) {
+                // 移除文本中的状态提示
+                const cleanText = text.replace(/\s*\([^)]*\)$/, '').trim();
+                
+                if (!cleanText || cleanText === '-') {
+                    return;
+                }
+                
+                // 尝试使用现代API
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(cleanText)
+                        .then(() => {
+                            showCopyFeedback(element);
+                        })
+                        .catch(err => {
+                            // 如果现代API失败，使用备用方法
+                            fallbackCopyText(cleanText, element);
+                        });
+                } else {
+                    // 使用备用方法
+                    fallbackCopyText(cleanText, element);
+                }
             }
-        }
-        
-        // 渲染播放列表
-        function renderPlaylist() {
-            playlistContent.innerHTML = songs.map((song, index) => `
-                <div class="playlist-item ${index === currentSongIndex ? 'active' : ''}" data-index="${index}">
-                    <span class="song-number">${String(index + 1).padStart(2, '0')}</span>
-                    <div class="song-details">
-                        <div class="song-name">${song.title}</div>
-                        <div class="song-artist">${song.artist}</div>
-                    </div>
-                    <span class="song-duration">${song.duration}</span>
-                </div>
-            `).join('');
             
-            // 绑定播放列表点击事件
-            document.querySelectorAll('.playlist-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const index = parseInt(item.dataset.index);
-                    loadSong(index);
-                    playSong();
-                });
-            });
-        }
-        
-        // 加载歌曲
-        function loadSong(index) {
-            if (index < 0 || index >= songs.length) return;
+            // 备用的复制方法
+            function fallbackCopyText(text, element) {
+                // 创建临时textarea元素
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                
+                // 防止屏幕滚动
+                textArea.style.position = "fixed";
+                textArea.style.left = "-999999px";
+                textArea.style.top = "-999999px";
+                
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        showCopyFeedback(element);
+                    } else {
+                        alert('复制失败，请手动选择并复制');
+                    }
+                } catch (err) {
+                    console.error('复制失败:', err);
+                    alert('复制失败，请手动选择并复制');
+                }
+                
+                document.body.removeChild(textArea);
+            }
             
-            currentSongIndex = index;
-            const song = songs[index];
+            // 显示复制成功反馈
+            function showCopyFeedback(element) {
+                element.classList.add('copied');
+                
+                copyFeedback.style.display = 'block';
+                copyFeedback.style.opacity = '1';
+                
+                setTimeout(() => {
+                    copyFeedback.style.opacity = '0';
+                    setTimeout(() => {
+                        copyFeedback.style.display = 'none';
+                        copyFeedback.style.opacity = '1';
+                    }, 300);
+                }, 1500);
+                
+                setTimeout(() => {
+                    element.classList.remove('copied');
+                }, 1000);
+            }
             
-            audioPlayer.src = song.url;
-            songTitle.textContent = song.title;
-            artistName.textContent = song.artist;
+            // 解析点分隔的日期字符串
+            function parseDotDate(dateStr) {
+                dateStr = dateStr.trim();
+                
+                // 支持 YYYY.MM.DD HH:mm:ss
+                const pattern1 = /^(\d{4})\.(\d{1,2})\.(\d{1,2})\s+(\d{1,2}):(\d{1,2}):(\d{1,2})$/;
+                const match1 = dateStr.match(pattern1);
+                if (match1) {
+                    const [, year, month, day, hour, minute, second] = match1;
+                    return new Date(
+                        parseInt(year),
+                        parseInt(month) - 1,
+                        parseInt(day),
+                        parseInt(hour),
+                        parseInt(minute),
+                        parseInt(second)
+                    );
+                }
+                
+                // 支持 YYYY.MM.DD HH:mm
+                const pattern2 = /^(\d{4})\.(\d{1,2})\.(\d{1,2})\s+(\d{1,2}):(\d{1,2})$/;
+                const match2 = dateStr.match(pattern2);
+                if (match2) {
+                    const [, year, month, day, hour, minute] = match2;
+                    return new Date(
+                        parseInt(year),
+                        parseInt(month) - 1,
+                        parseInt(day),
+                        parseInt(hour),
+                        parseInt(minute)
+                    );
+                }
+                
+                // 支持 YYYY.MM.DD
+                const pattern3 = /^(\d{4})\.(\d{1,2})\.(\d{1,2})$/;
+                const match3 = dateStr.match(pattern3);
+                if (match3) {
+                    const [, year, month, day] = match3;
+                    return new Date(
+                        parseInt(year),
+                        parseInt(month) - 1,
+                        parseInt(day)
+                    );
+                }
+                
+                return null;
+            }
             
-            // 更新封面
-            updateCover();
+            // 格式化日期为点分隔格式
+            function formatDateWithDot(date) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                const seconds = String(date.getSeconds()).padStart(2, '0');
+                
+                return `${year}.${month}.${day} ${hours}:${minutes}:${seconds}`;
+            }
             
-            // 高亮当前歌曲
-            document.querySelectorAll('.playlist-item').forEach((item, i) => {
-                item.classList.toggle('active', i === index);
-            });
+            // 十六进制转日期
+            function convertHexToDate() {
+                let hexValue = hexInput.value.trim();
+                
+                if (!hexValue) {
+                    dateOutput.textContent = '';
+                    return;
+                }
+                
+                // 清理输入
+                hexValue = hexValue.replace(/^0x/, '');
+                hexValue = hexValue.replace(/\s/g, '');
+                
+                if (!/^[0-9a-fA-F]+$/.test(hexValue)) {
+                    dateOutput.textContent = '无效的十六进制';
+                    return;
+                }
+                
+                try {
+                    const decimalValue = parseInt(hexValue, 16);
+                    
+                    // 默认使用毫秒级时间戳
+                    let timestamp = decimalValue;
+                    let type = '';
+                    
+                    // 如果值看起来是秒级(小于10000000000)，自动调整为毫秒级
+                    if (decimalValue < 10000000000) {
+                        timestamp = decimalValue * 1000;
+                        type = '';
+                    }
+                    
+                    const date = new Date(timestamp);
+                    
+                    if (isNaN(date.getTime())) {
+                        dateOutput.textContent = '无效时间戳';
+                        return;
+                    }
+                    
+                    const dateStr = formatDateWithDot(date);
+                    dateOutput.textContent = `${dateStr} ${type}`;
+                    
+                } catch (error) {
+                    dateOutput.textContent = '转换错误';
+                }
+            }
             
-            // 预加载时长
-            audioPlayer.addEventListener('loadedmetadata', () => {
-                songs[index].duration = formatTime(audioPlayer.duration);
-                document.querySelectorAll('.song-duration')[index].textContent = songs[index].duration;
-                totalTime.textContent = songs[index].duration;
-            });
-        }
-        
-        // 更新封面
-        function updateCover() {
-            // 使用随机图片API
-            fetch('https://api.dicebear.com/7.x/micah/svg?seed=' + songs[currentSongIndex].title)
-                .then(res => res.text())
-                .then(svg => {
-                    const blob = new Blob([svg], { type: 'image/svg+xml' });
-                    const url = URL.createObjectURL(blob);
-                    albumCover.style.backgroundImage = `url(${url})`;
-                })
-                .catch(() => {
-                    albumCover.style.backgroundImage = `linear-gradient(45deg, #${Math.floor(Math.random()*16777215).toString(16)}, #${Math.floor(Math.random()*16777215).toString(16)})`;
-                });
-        }
-        
-        // 播放控制
-        function playSong() {
-            isPlaying = true;
-            playIcon.innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
-            albumCover.classList.add('playing');
-            audioPlayer.play();
-        }
-        
-        function pauseSong() {
-            isPlaying = false;
-            playIcon.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"></polygon>';
-            albumCover.classList.remove('playing');
-            audioPlayer.pause();
-        }
-        
-        // 事件监听
-        playBtn.addEventListener('click', () => {
-            isPlaying ? pauseSong() : playSong();
+            // 日期转十六进制
+            function convertDateToHex() {
+                const dateTimeStr = dateTimeInput.value.trim();
+                
+                if (!dateTimeStr) {
+                    hexResult.textContent = '';
+                    return;
+                }
+                
+                try {
+                    // 先尝试解析点分隔格式
+                    let date = parseDotDate(dateTimeStr);
+                    
+                    // 如果点分隔格式无效，尝试其他格式
+                    if (!date || isNaN(date.getTime())) {
+                        date = new Date(dateTimeStr);
+                    }
+                    
+                    if (!date || isNaN(date.getTime())) {
+                        hexResult.textContent = '无效日期格式';
+                        return;
+                    }
+                    
+                    // 使用毫秒级时间戳
+                    const timestamp = date.getTime();
+                    const hexValue = timestamp.toString(16);
+                    hexResult.textContent = hexValue;
+                    
+                } catch (error) {
+                    hexResult.textContent = '转换错误';
+                }
+            }
         });
-        
-        prevBtn.addEventListener('click', () => {
-            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
-            loadSong(currentSongIndex);
-            if (isPlaying) playSong();
-        });
-        
-        nextBtn.addEventListener('click', () => {
-            currentSongIndex = (currentSongIndex + 1) % songs.length;
-            loadSong(currentSongIndex);
-            if (isPlaying) playSong();
-        });
-        
-        // 进度条
-        progressBar.addEventListener('click', (e) => {
-            const rect = progressBar.getBoundingClientRect();
-            const clickX = e.clientX - rect.left;
-            const width = rect.width;
-            const percentage = (clickX / width);
-            audioPlayer.currentTime = percentage * audioPlayer.duration;
-        });
-        
-        // 音量控制
-        volumeSlider.addEventListener('click', (e) => {
-            const rect = volumeSlider.getBoundingClientRect();
-            const clickX = e.clientX - rect.left;
-            const width = rect.width;
-            const percentage = (clickX / width);
-            audioPlayer.volume = percentage;
-            volumeLevel.style.width = `${percentage * 100}%`;
-        });
-        
-        // 进度更新
-        audioPlayer.addEventListener('timeupdate', () => {
-            const percentage = (audioPlayer.currentTime / audioPlayer.duration) * 100 || 0;
-            progress.style.width = `${percentage}%`;
-            currentTime.textContent = formatTime(audioPlayer.currentTime);
-        });
-        
-        // 歌曲结束自动下一首
-        audioPlayer.addEventListener('ended', () => {
-            nextBtn.click();
-        });
-        
-        // 格式化时间
-        function formatTime(seconds) {
-            if (!seconds || isNaN(seconds)) return '0:00';
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs.toString().padStart(2, '0')}`;
-        }
-        
-        // 初始化
-        fetchSongs();
     </script>
 </body>
 </html>
