@@ -3,502 +3,359 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>日期与十六进制转换</title>
+    <title>哈夫币计算器</title>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
-            font-size: 12px;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
         }
         
         body {
-            background-color: #f5f5f5;
-            padding: 8px;
+            background: linear-gradient(135deg, #0c1a2d 0%, #142840 100%);
+            color: #e0e9ff;
+            min-height: 100vh;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 4px;
-            padding: 12px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        .calculator-card {
+            width: 100%;
+            max-width: 480px;
+            background-color: rgba(16, 30, 48, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 6px 20px rgba(0, 20, 50, 0.5);
+            border: 1px solid #2a4a75;
         }
         
         .title {
             text-align: center;
-            margin-bottom: 12px;
-            color: #333;
-            font-size: 14px;
+            margin-bottom: 20px;
         }
         
-        .mode {
-            display: flex;
-            margin-bottom: 12px;
-            border-bottom: 1px solid #e0e0e0;
+        h1 {
+            font-size: 1.5rem;
+            color: #7ab3ff;
+            margin-bottom: 4px;
         }
         
-        .mode-btn {
-            flex: 1;
-            padding: 6px;
-            text-align: center;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #666;
+        .subtitle {
+            color: #b0d0ff;
+            font-size: 0.85rem;
         }
         
-        .mode-btn.active {
-            color: #0066cc;
-            border-bottom: 2px solid #0066cc;
+        .input-row {
+            margin-bottom: 15px;
         }
         
-        .input-group {
-            margin-bottom: 8px;
+        .input-label {
+            display: block;
+            margin-bottom: 6px;
+            color: #a0c8ff;
+            font-weight: 600;
+            font-size: 0.9rem;
         }
         
-        input {
-            padding: 6px 8px;
-            border: 1px solid #ddd;
-            border-radius: 3px;
+        .amount-input {
             width: 100%;
-            font-size: 12px;
+            padding: 10px 12px;
+            background-color: rgba(25, 45, 70, 0.8);
+            border: 2px solid #3a6ab9;
+            border-radius: 6px;
+            color: white;
+            font-size: 1rem;
+            text-align: center;
         }
         
-        .result {
-            margin-top: 12px;
-            padding: 8px;
-            background-color: #f9f9f9;
-            border-radius: 3px;
-            border: 1px solid #eee;
+        .amount-input:focus {
+            outline: none;
+            border-color: #5a9aff;
+        }
+        
+        .unit-selector {
+            display: flex;
+            margin: 12px 0 15px;
+            background-color: rgba(25, 45, 70, 0.6);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .unit-option {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 3px solid transparent;
+            font-size: 0.9rem;
+        }
+        
+        .unit-option:hover {
+            background-color: rgba(58, 106, 185, 0.3);
+        }
+        
+        .unit-option.active {
+            background-color: rgba(58, 106, 185, 0.5);
+            border-bottom-color: #5a9aff;
+            color: white;
+        }
+        
+        .exchange-rate {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 15px 0;
+            padding: 12px;
+            background-color: rgba(25, 45, 70, 0.6);
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .rate-display {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            color: #a0c8ff;
+        }
+        
+        .rate-input-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .rate-prefix {
+            margin-right: 6px;
+            color: #e0e9ff;
+            font-size: 0.9rem;
+        }
+        
+        .rate-number-input {
+            width: 70px;
+            padding: 7px 10px;
+            background-color: rgba(10, 25, 45, 0.8);
+            border: 2px solid #3a6ab9;
+            border-radius: 5px;
+            color: white;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .rate-unit {
+            margin-left: 6px;
+            color: #7ab3ff;
+            font-weight: 600;
+        }
+        
+        .rate-note {
+            font-size: 0.75rem;
+            color: #8ca3c7;
+            margin-top: 5px;
+            text-align: center;
+        }
+        
+        .results-box {
+            background-color: rgba(10, 25, 45, 0.8);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            border: 1px solid #2a4a75;
         }
         
         .result-item {
             display: flex;
-            margin-bottom: 5px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            padding: 4px 6px;
-            border-radius: 3px;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(58, 106, 185, 0.2);
+            font-size: 0.9rem;
         }
         
-        .result-item:hover {
-            background-color: #f0f0f0;
-        }
-        
-        .result-item.copied {
-            background-color: #e6f7e6;
-        }
-        
-        .result-label {
-            width: 70px;
-            color: #666;
+        .result-item:last-child {
+            border-bottom: none;
         }
         
         .result-value {
-            flex: 1;
-            font-family: 'Consolas', monospace;
-            word-break: break-all;
-            user-select: all;
+            font-weight: 700;
+            color: #7ab3ff;
+            font-size: 1rem;
         }
         
-        .hidden {
-            display: none;
+        .quick-reference {
+            margin-top: 20px;
+            padding: 12px;
+            background-color: rgba(58, 106, 185, 0.1);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            border-left: 3px solid #3a6ab9;
         }
         
-        .current-time-btn {
-            width: 100%;
-            margin-top: 8px;
-            padding: 6px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
+        .warning {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: rgba(185, 80, 58, 0.1);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: #ffa07a;
+            text-align: center;
+            border: 1px solid rgba(185, 80, 58, 0.3);
         }
         
-        .current-time-btn:hover {
-            background-color: #218838;
-        }
-        
-        .auto-update {
-            font-size: 10px;
-            color: #28a745;
-            text-align: right;
-            margin-top: 2px;
-        }
-        
-        .copy-tip {
-            font-size: 10px;
-            color: #888;
-            text-align: right;
-            margin-top: 2px;
-        }
-        
-        .copy-feedback {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #28a745;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 4px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            z-index: 1000;
-            display: none;
+        @media (max-width: 600px) {
+            .calculator-card {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.3rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="copy-feedback" id="copyFeedback">已复制到剪贴板</div>
-    
-    <div class="container">
-        <div class="title">日期与十六进制转换</div>
-        
-        <div class="mode">
-            <button class="mode-btn active" data-mode="hex-to-date">十六进制转日期</button>
-            <button class="mode-btn" data-mode="date-to-hex">日期转十六进制</button>
+    <div class="calculator-card">
+        <div class="title">
+            <h1>哈夫币计算器</h1>
+            <p class="subtitle">三角洲行动游戏货币换算</p>
         </div>
         
-        <!-- 十六进制转日期 -->
-        <div id="hex-to-date">
-            <div class="input-group">
-                <input type="text" id="hexInput" placeholder="输入十六进制" value="">
-                <div class="auto-update"></div>
-            </div>
-            
-            <div class="result">
-                <div class="result-item" id="dateResult" data-copy-target="dateOutput">
-                    <div class="result-label">日期时间:</div>
-                    <div class="result-value" id="dateOutput">-</div>
-                </div>
-            </div>
-            <div class="copy-tip"></div>
+        <div class="input-row">
+            <label class="input-label">输入哈夫币数量</label>
+            <input type="number" id="amountInput" class="amount-input" value="" min="0" step="any">
         </div>
         
-        <!-- 日期转十六进制 -->
-        <div id="date-to-hex" class="hidden">
-            <div class="input-group">
-                <input type="text" id="dateTimeInput" placeholder="2025.01.01 08:00:00" value="">
-                <div class="auto-update"></div>
+        <div class="unit-selector">
+            <div class="unit-option" data-unit="1">个</div>
+            <div class="unit-option active" data-unit="1000">K (千)</div>
+            <div class="unit-option" data-unit="1000000">M (百万)</div>
+        </div>
+        
+        <div class="exchange-rate">
+            <div class="rate-display">
+                <span class="rate-prefix">兑换比例：1元 =</span>
+                <span id="rateDisplay">35万</span>
+                <span class="rate-prefix">哈夫币</span>
             </div>
             
-            <button class="current-time-btn" id="nowBtn">使用当前时间</button>
-            
-            <div class="result">
-                <div class="result-item" id="hexResultItem" data-copy-target="hexResult">
-                    <div class="result-label">十六进制:</div>
-                    <div class="result-value" id="hexResult">-</div>
-                </div>
+            <div class="rate-input-container">
+                <span class="rate-prefix">调整数字：</span>
+                <input type="number" id="rateNumberInput" class="rate-number-input" value="35" min="1" step="1">
+                <span class="rate-unit">万</span>
             </div>
-            <div class="copy-tip"></div>
+            
+            <div class="rate-note">
+                输入的数字代表"万"，例如：35 = 35万 = 350,000哈夫币
+            </div>
+        </div>
+        
+        <div class="results-box">
+            <div class="result-item">
+                <span>基础哈夫币数量：</span>
+                <span class="result-value" id="baseResult">8,000,000</span>
+            </div>
+            
+            <div class="result-item">
+                <span>换算为 K 单位：</span>
+                <span class="result-value" id="kResult">8,000K</span>
+            </div>
+            
+            <div class="result-item">
+                <span>换算为 M 单位：</span>
+                <span class="result-value" id="mResult">8M</span>
+            </div>
+            
+            <div class="result-item">
+                <span>参考人民币价值：</span>
+                <span class="result-value" id="cnyResult">约 22.86 元</span>
+            </div>
+        </div>
+        
+        <div class="quick-reference">
+            <p><strong>游戏内获取方式：</strong></p>
+            <p>• 主线任务：完成全部剧情可得1000万哈夫币</p>
+            <p>• 每日挑战：开启宝箱获得武器并出售</p>
+            <p>• 大战场模式：根据排名获得奖励</p>
+        </div>
+        
+        <div class="warning">
+            注意：玩家间汇率是非官方的，存在交易风险。官方不推荐游戏外交易。
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 切换模式
-            const modeBtns = document.querySelectorAll('.mode-btn');
-            const hexToDate = document.getElementById('hex-to-date');
-            const dateToHex = document.getElementById('date-to-hex');
-            const copyFeedback = document.getElementById('copyFeedback');
+            const amountInput = document.getElementById('amountInput');
+            const unitOptions = document.querySelectorAll('.unit-option');
+            const rateNumberInput = document.getElementById('rateNumberInput');
+            const rateDisplay = document.getElementById('rateDisplay');
             
-            modeBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    modeBtns.forEach(b => b.classList.remove('active'));
+            const baseResult = document.getElementById('baseResult');
+            const kResult = document.getElementById('kResult');
+            const mResult = document.getElementById('mResult');
+            const cnyResult = document.getElementById('cnyResult');
+            
+            let currentUnit = 1000; // 默认K单位
+            
+            // 设置单位选择
+            unitOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    unitOptions.forEach(opt => opt.classList.remove('active'));
                     this.classList.add('active');
-                    
-                    const mode = this.getAttribute('data-mode');
-                    hexToDate.classList.toggle('hidden', mode !== 'hex-to-date');
-                    dateToHex.classList.toggle('hidden', mode !== 'date-to-hex');
-                    
-                    // 切换时也触发转换
-                    if (mode === 'hex-to-date') {
-                        convertHexToDate();
-                    } else {
-                        convertDateToHex();
-                    }
+                    currentUnit = parseInt(this.getAttribute('data-unit'));
+                    calculateHafu();
                 });
             });
             
-            // 十六进制转日期功能
-            const hexInput = document.getElementById('hexInput');
-            const dateOutput = document.getElementById('dateOutput');
-            const dateResult = document.getElementById('dateResult');
-            
-            // 日期转十六进制功能
-            const dateTimeInput = document.getElementById('dateTimeInput');
-            const nowBtn = document.getElementById('nowBtn');
-            const hexResult = document.getElementById('hexResult');
-            const hexResultItem = document.getElementById('hexResultItem');
-            
-            // 初始化转换
-            convertHexToDate();
-            convertDateToHex();
-            
-            // 输入时自动转换
-            let hexTimer;
-            hexInput.addEventListener('input', function() {
-                clearTimeout(hexTimer);
-                hexTimer = setTimeout(convertHexToDate, 100);
+            // 输入变化时重新计算
+            amountInput.addEventListener('input', calculateHafu);
+            rateNumberInput.addEventListener('input', function() {
+                // 更新显示
+                rateDisplay.textContent = this.value + '万';
+                calculateHafu();
             });
             
-            let dateTimer;
-            dateTimeInput.addEventListener('input', function() {
-                clearTimeout(dateTimer);
-                dateTimer = setTimeout(convertDateToHex, 100);
-            });
-            
-            // 复制功能
-            dateResult.addEventListener('click', function() {
-                const targetId = this.getAttribute('data-copy-target');
-                const targetElement = document.getElementById(targetId);
-                const text = targetElement.textContent;
+            // 计算函数
+            function calculateHafu() {
+                // 获取输入值
+                const amount = parseFloat(amountInput.value) || 0;
+                const rateNumber = parseFloat(rateNumberInput.value) || 35;
                 
-                if (text && text !== '-') {
-                    copyToClipboard(text, this);
-                }
-            });
-            
-            hexResultItem.addEventListener('click', function() {
-                const targetId = this.getAttribute('data-copy-target');
-                const targetElement = document.getElementById(targetId);
-                const text = targetElement.textContent;
+                // 计算汇率（1元 = X万哈夫币）
+                const exchangeRate = rateNumber * 10000;
                 
-                if (text && text !== '-') {
-                    copyToClipboard(text, this);
-                }
-            });
-            
-            // 当前时间按钮
-            nowBtn.addEventListener('click', function() {
-                const now = new Date();
-                const year = now.getFullYear();
-                const month = String(now.getMonth() + 1).padStart(2, '0');
-                const day = String(now.getDate()).padStart(2, '0');
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                const seconds = String(now.getSeconds()).padStart(2, '0');
+                // 计算基础哈夫币数量
+                const baseHafu = amount * currentUnit;
                 
-                dateTimeInput.value = `${year}.${month}.${day} ${hours}:${minutes}:${seconds}`;
-                convertDateToHex();
-            });
-            
-            // 复制到剪贴板函数
-            function copyToClipboard(text, element) {
-                // 移除文本中的状态提示
-                const cleanText = text.replace(/\s*\([^)]*\)$/, '').trim();
+                // 更新结果显示
+                baseResult.textContent = formatNumber(baseHafu);
+                kResult.textContent = formatNumber(baseHafu / 1000) + 'K';
+                mResult.textContent = formatNumber(baseHafu / 1000000) + 'M';
                 
-                if (!cleanText || cleanText === '-') {
-                    return;
-                }
-                
-                // 尝试使用现代API
-                if (navigator.clipboard && window.isSecureContext) {
-                    navigator.clipboard.writeText(cleanText)
-                        .then(() => {
-                            showCopyFeedback(element);
-                        })
-                        .catch(err => {
-                            // 如果现代API失败，使用备用方法
-                            fallbackCopyText(cleanText, element);
-                        });
-                } else {
-                    // 使用备用方法
-                    fallbackCopyText(cleanText, element);
-                }
+                // 计算人民币价值
+                const cnyValue = baseHafu / exchangeRate;
+                cnyResult.textContent = '约 ' + formatNumber(cnyValue, 2) + ' 元';
             }
             
-            // 备用的复制方法
-            function fallbackCopyText(text, element) {
-                // 创建临时textarea元素
-                const textArea = document.createElement("textarea");
-                textArea.value = text;
+            // 数字格式化函数
+            function formatNumber(num, decimals = 0) {
+                if (isNaN(num)) return '0';
                 
-                // 防止屏幕滚动
-                textArea.style.position = "fixed";
-                textArea.style.left = "-999999px";
-                textArea.style.top = "-999999px";
+                // 处理小数位数
+                const factor = Math.pow(10, decimals);
+                const roundedNum = Math.round(num * factor) / factor;
                 
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
-                
-                try {
-                    const successful = document.execCommand('copy');
-                    if (successful) {
-                        showCopyFeedback(element);
-                    } else {
-                        alert('复制失败，请手动选择并复制');
-                    }
-                } catch (err) {
-                    console.error('复制失败:', err);
-                    alert('复制失败，请手动选择并复制');
-                }
-                
-                document.body.removeChild(textArea);
+                // 添加千位分隔符
+                return roundedNum.toLocaleString('zh-CN', {
+                    minimumFractionDigits: decimals,
+                    maximumFractionDigits: decimals
+                });
             }
             
-            // 显示复制成功反馈
-            function showCopyFeedback(element) {
-                element.classList.add('copied');
-                
-                copyFeedback.style.display = 'block';
-                copyFeedback.style.opacity = '1';
-                
-                setTimeout(() => {
-                    copyFeedback.style.opacity = '0';
-                    setTimeout(() => {
-                        copyFeedback.style.display = 'none';
-                        copyFeedback.style.opacity = '1';
-                    }, 300);
-                }, 1500);
-                
-                setTimeout(() => {
-                    element.classList.remove('copied');
-                }, 1000);
-            }
-            
-            // 解析点分隔的日期字符串
-            function parseDotDate(dateStr) {
-                dateStr = dateStr.trim();
-                
-                // 支持 YYYY.MM.DD HH:mm:ss
-                const pattern1 = /^(\d{4})\.(\d{1,2})\.(\d{1,2})\s+(\d{1,2}):(\d{1,2}):(\d{1,2})$/;
-                const match1 = dateStr.match(pattern1);
-                if (match1) {
-                    const [, year, month, day, hour, minute, second] = match1;
-                    return new Date(
-                        parseInt(year),
-                        parseInt(month) - 1,
-                        parseInt(day),
-                        parseInt(hour),
-                        parseInt(minute),
-                        parseInt(second)
-                    );
-                }
-                
-                // 支持 YYYY.MM.DD HH:mm
-                const pattern2 = /^(\d{4})\.(\d{1,2})\.(\d{1,2})\s+(\d{1,2}):(\d{1,2})$/;
-                const match2 = dateStr.match(pattern2);
-                if (match2) {
-                    const [, year, month, day, hour, minute] = match2;
-                    return new Date(
-                        parseInt(year),
-                        parseInt(month) - 1,
-                        parseInt(day),
-                        parseInt(hour),
-                        parseInt(minute)
-                    );
-                }
-                
-                // 支持 YYYY.MM.DD
-                const pattern3 = /^(\d{4})\.(\d{1,2})\.(\d{1,2})$/;
-                const match3 = dateStr.match(pattern3);
-                if (match3) {
-                    const [, year, month, day] = match3;
-                    return new Date(
-                        parseInt(year),
-                        parseInt(month) - 1,
-                        parseInt(day)
-                    );
-                }
-                
-                return null;
-            }
-            
-            // 格式化日期为点分隔格式
-            function formatDateWithDot(date) {
-                const year = date.getFullYear();
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const day = String(date.getDate()).padStart(2, '0');
-                const hours = String(date.getHours()).padStart(2, '0');
-                const minutes = String(date.getMinutes()).padStart(2, '0');
-                const seconds = String(date.getSeconds()).padStart(2, '0');
-                
-                return `${year}.${month}.${day} ${hours}:${minutes}:${seconds}`;
-            }
-            
-            // 十六进制转日期
-            function convertHexToDate() {
-                let hexValue = hexInput.value.trim();
-                
-                if (!hexValue) {
-                    dateOutput.textContent = '';
-                    return;
-                }
-                
-                // 清理输入
-                hexValue = hexValue.replace(/^0x/, '');
-                hexValue = hexValue.replace(/\s/g, '');
-                
-                if (!/^[0-9a-fA-F]+$/.test(hexValue)) {
-                    dateOutput.textContent = '无效的十六进制';
-                    return;
-                }
-                
-                try {
-                    const decimalValue = parseInt(hexValue, 16);
-                    
-                    // 默认使用毫秒级时间戳
-                    let timestamp = decimalValue;
-                    let type = '';
-                    
-                    // 如果值看起来是秒级(小于10000000000)，自动调整为毫秒级
-                    if (decimalValue < 10000000000) {
-                        timestamp = decimalValue * 1000;
-                        type = '';
-                    }
-                    
-                    const date = new Date(timestamp);
-                    
-                    if (isNaN(date.getTime())) {
-                        dateOutput.textContent = '无效时间戳';
-                        return;
-                    }
-                    
-                    const dateStr = formatDateWithDot(date);
-                    dateOutput.textContent = `${dateStr} ${type}`;
-                    
-                } catch (error) {
-                    dateOutput.textContent = '转换错误';
-                }
-            }
-            
-            // 日期转十六进制
-            function convertDateToHex() {
-                const dateTimeStr = dateTimeInput.value.trim();
-                
-                if (!dateTimeStr) {
-                    hexResult.textContent = '';
-                    return;
-                }
-                
-                try {
-                    // 先尝试解析点分隔格式
-                    let date = parseDotDate(dateTimeStr);
-                    
-                    // 如果点分隔格式无效，尝试其他格式
-                    if (!date || isNaN(date.getTime())) {
-                        date = new Date(dateTimeStr);
-                    }
-                    
-                    if (!date || isNaN(date.getTime())) {
-                        hexResult.textContent = '无效日期格式';
-                        return;
-                    }
-                    
-                    // 使用毫秒级时间戳
-                    const timestamp = date.getTime();
-                    const hexValue = timestamp.toString(16);
-                    hexResult.textContent = hexValue;
-                    
-                } catch (error) {
-                    hexResult.textContent = '转换错误';
-                }
-            }
+            // 初始计算
+            calculateHafu();
         });
     </script>
 </body>
